@@ -1,6 +1,6 @@
 <template>
     <li :class="classes" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
-        <div :class="[prefixCls + '-submenu-title']" ref="reference" @click.stop="handleClick" :style="titleStyle">
+        <div :class="[prefixCls + '-submenu-title']" ref="reference" @click="handleClick">
             <slot name="title"></slot>
             <Icon type="ios-arrow-down" :class="[prefixCls + '-submenu-title-icon']"></Icon>
         </div>
@@ -21,15 +21,14 @@
     import Drop from '../select/dropdown.vue';
     import Icon from '../icon/icon.vue';
     import CollapseTransition from '../base/collapse-transition';
-    import { getStyle, findComponentUpward, findComponentsDownward } from '../../utils/assist';
+    import { getStyle, findComponentUpward } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
-    import mixin from './mixin';
 
     const prefixCls = 'ivu-menu';
 
     export default {
         name: 'Submenu',
-        mixins: [ Emitter, mixin ],
+        mixins: [ Emitter ],
         components: { Icon, Drop, CollapseTransition },
         props: {
             name: {
@@ -46,7 +45,8 @@
                 prefixCls: prefixCls,
                 active: false,
                 opened: false,
-                dropWidth: parseFloat(getStyle(this.$el, 'width'))
+                dropWidth: parseFloat(getStyle(this.$el, 'width')),
+                parent: findComponentUpward(this, 'Menu')
             };
         },
         computed: {
@@ -54,27 +54,23 @@
                 return [
                     `${prefixCls}-submenu`,
                     {
-                        [`${prefixCls}-item-active`]: this.active && !this.hasParentSubmenu,
+                        [`${prefixCls}-item-active`]: this.active,
                         [`${prefixCls}-opened`]: this.opened,
-                        [`${prefixCls}-submenu-disabled`]: this.disabled,
-                        [`${prefixCls}-submenu-has-parent-submenu`]: this.hasParentSubmenu,
-                        [`${prefixCls}-child-item-active`]: this.active
+                        [`${prefixCls}-submenu-disabled`]: this.disabled
                     }
                 ];
             },
+            mode () {
+                return this.parent.mode;
+            },
             accordion () {
-                return this.menu.accordion;
+                return this.parent.accordion;
             },
             dropStyle () {
                 let style = {};
 
                 if (this.dropWidth) style.minWidth = `${this.dropWidth}px`;
                 return style;
-            },
-            titleStyle () {
-                return this.hasParentSubmenu && this.mode !== 'horizontal' ? {
-                    paddingLeft: 43 + (this.parentSubmenuNum - 1) * 24 + 'px'
-                } : {};
             }
         },
         methods: {
@@ -84,7 +80,7 @@
 
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
-                    this.menu.updateOpenKeys(this.name);
+                    this.parent.updateOpenKeys(this.name);
                     this.opened = true;
                 }, 250);
             },
@@ -94,7 +90,7 @@
 
                 clearTimeout(this.timeout);
                 this.timeout = setTimeout(() => {
-                    this.menu.updateOpenKeys(this.name);
+                    this.parent.updateOpenKeys(this.name);
                     this.opened = false;
                 }, 150);
             },
@@ -103,12 +99,12 @@
                 if (this.mode === 'horizontal') return;
                 const opened = this.opened;
                 if (this.accordion) {
-                    this.$parent.$children.forEach(item => {
+                    this.parent.$children.forEach(item => {
                         if (item.$options.name === 'Submenu') item.opened = false;
                     });
                 }
                 this.opened = !opened;
-                this.menu.updateOpenKeys(this.name);
+                this.parent.updateOpenKeys(this.name);
             }
         },
         watch: {
@@ -135,10 +131,6 @@
                 return true;
             });
             this.$on('on-update-active-name', (status) => {
-                if (findComponentUpward(this, 'Submenu')) this.dispatch('Submenu', 'on-update-active-name', status);
-                if (findComponentsDownward(this, 'Submenu')) findComponentsDownward(this, 'Submenu').forEach(item => {
-                    item.active = false;
-                });
                 this.active = status;
             });
         }

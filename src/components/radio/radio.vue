@@ -7,15 +7,12 @@
                 :class="inputClasses"
                 :disabled="disabled"
                 :checked="currentValue"
-                :name="groupName"
-                @change="change"
-                @focus="onFocus"
-                @blur="onBlur">
+                @change="change">
         </span><slot>{{ label }}</slot>
     </label>
 </template>
 <script>
-    import { findComponentUpward, oneOf } from '../../utils/assist';
+    import { findComponentUpward } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
 
     const prefixCls = 'ivu-radio';
@@ -42,27 +39,13 @@
             disabled: {
                 type: Boolean,
                 default: false
-            },
-            size: {
-                validator (value) {
-                    return oneOf(value, ['small', 'large', 'default']);
-                },
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
-                }
-            },
-            name: {
-                type: String
             }
         },
         data () {
             return {
                 currentValue: this.value,
                 group: false,
-                groupName: this.name,
-                parent: findComponentUpward(this, 'RadioGroup'),
-                focusWrapper: false,
-                focusInner: false
+                parent: findComponentUpward(this, 'RadioGroup')
             };
         },
         computed: {
@@ -72,9 +55,7 @@
                     {
                         [`${prefixCls}-group-item`]: this.group,
                         [`${prefixCls}-wrapper-checked`]: this.currentValue,
-                        [`${prefixCls}-wrapper-disabled`]: this.disabled,
-                        [`${prefixCls}-${this.size}`]: !!this.size,
-                        [`${prefixCls}-focus`]: this.focusWrapper
+                        [`${prefixCls}-wrapper-disabled`]: this.disabled
                     }
                 ];
             },
@@ -88,35 +69,18 @@
                 ];
             },
             innerClasses () {
-                return [
-                    `${prefixCls}-inner`,
-                    {
-                        [`${prefixCls}-focus`]: this.focusInner
-                    }
-                ];
+                return `${prefixCls}-inner`;
             },
             inputClasses () {
                 return `${prefixCls}-input`;
             }
         },
         mounted () {
-            if (this.parent) {
-                this.group = true;
-                if (this.name && this.name !== this.parent.name) {
-                    /* eslint-disable no-console */
-                    if (console.warn) {
-                        console.warn('[iview] Name does not match Radio Group name.');
-                    }
-                    /* eslint-enable no-console */
-                } else {
-                    this.groupName = this.parent.name; 
-                }
-            }
-
-            if (this.group) {
-                this.parent.updateValue();
-            } else {
+            if (this.parent) this.group = true;
+            if (!this.group) {
                 this.updateValue();
+            } else {
+                this.parent.updateValue();
             }
         },
         methods: {
@@ -128,43 +92,30 @@
                 const checked = event.target.checked;
                 this.currentValue = checked;
 
-                const value = checked ? this.trueValue : this.falseValue;
+                let value = checked ? this.trueValue : this.falseValue;
                 this.$emit('input', value);
 
-                if (this.group) {
-                    if (this.label !== undefined) {
-                        this.parent.change({
-                            value: this.label,
-                            checked: this.value
-                        });
-                    }
-                } else {
+                if (this.group && this.label !== undefined) {
+                    this.parent.change({
+                        value: this.label,
+                        checked: this.value
+                    });
+                }
+                if (!this.group) {
                     this.$emit('on-change', value);
                     this.dispatch('FormItem', 'on-form-change', value);
                 }
             },
             updateValue () {
                 this.currentValue = this.value === this.trueValue;
-            },
-            onBlur () {
-                this.focusWrapper = false;
-                this.focusInner = false;
-            },
-            onFocus () {
-                if (this.group && this.parent.type === 'button') {
-                    this.focusWrapper = true;
-                } else {
-                    this.focusInner = true;
-                }
             }
         },
         watch: {
             value (val) {
-                if (val === this.trueValue || val === this.falseValue) {
-                    this.updateValue();
-                } else {
+                if (val !== this.trueValue && val !== this.falseValue) {
                     throw 'Value should be trueValue or falseValue.';
                 }
+                this.updateValue();
             }
         }
     };

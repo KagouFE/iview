@@ -1,37 +1,23 @@
 <template>
-    <span
-        tabindex="0"
-        :class="wrapClasses"
-        @click="toggle"
-        @keydown.space="toggle"
-    >
-        <input type="hidden" :name="name" :value="currentValue">
+    <span :class="wrapClasses" @click="toggle">
         <span :class="innerClasses">
-            <slot name="open" v-if="currentValue === trueValue"></slot>
-            <slot name="close" v-if="currentValue === falseValue"></slot>
+            <slot name="open" v-if="currentValue"></slot>
+            <slot name="close" v-if="!currentValue"></slot>
         </span>
     </span>
 </template>
 <script>
-    import {oneOf} from '../../utils/assist';
+    import { oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
 
     const prefixCls = 'ivu-switch';
 
     export default {
-        name: 'iSwitch',
-        mixins: [Emitter],
+        name: 'Switch',
+        mixins: [ Emitter ],
         props: {
             value: {
-                type: [String, Number, Boolean],
-                default: false
-            },
-            trueValue: {
-                type: [String, Number, Boolean],
-                default: true
-            },
-            falseValue: {
-                type: [String, Number, Boolean],
+                type: Boolean,
                 default: false
             },
             disabled: {
@@ -40,18 +26,8 @@
             },
             size: {
                 validator (value) {
-                    return oneOf(value, ['large', 'small', 'default', 'big']);
-                },
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
+                    return oneOf(value, ['large', 'small']);
                 }
-            },
-            name: {
-                type: String
-            },
-            loading: {
-                type: Boolean,
-                default: false
             }
         },
         data () {
@@ -64,10 +40,9 @@
                 return [
                     `${prefixCls}`,
                     {
-                        [`${prefixCls}-checked`]: this.currentValue === this.trueValue,
+                        [`${prefixCls}-checked`]: this.currentValue,
                         [`${prefixCls}-disabled`]: this.disabled,
-                        [`${prefixCls}-${this.size}`]: !!this.size,
-                        [`${prefixCls}-loading`]: this.loading,
+                        [`${prefixCls}-${this.size}`]: !!this.size
                     }
                 ];
             },
@@ -76,14 +51,12 @@
             }
         },
         methods: {
-            toggle (event) {
-                event.preventDefault();
-                if (this.disabled || this.loading) {
+            toggle () {
+                if (this.disabled) {
                     return false;
                 }
 
-                const checked = this.currentValue === this.trueValue ? this.falseValue : this.trueValue;
-
+                const checked = !this.currentValue;
                 this.currentValue = checked;
                 this.$emit('input', checked);
                 this.$emit('on-change', checked);
@@ -92,9 +65,6 @@
         },
         watch: {
             value (val) {
-                if (val !== this.trueValue && val !== this.falseValue) {
-                    throw 'Value should be trueValue or falseValue.';
-                }
                 this.currentValue = val;
             }
         }

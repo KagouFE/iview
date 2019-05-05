@@ -4,7 +4,7 @@
     </div>
 </template>
 <script>
-    import { oneOf, findComponentDownward, findBrothersComponents } from '../../utils/assist';
+    import { oneOf } from '../../utils/assist';
 
     const prefixCls = 'ivu-row';
 
@@ -30,12 +30,7 @@
                 type: Number,
                 default: 0
             },
-            className: String,
-            wrap: {
-                validator (value) {
-                    return oneOf(value, ['nowrap']);
-                }
-            }
+            className: String
         },
         computed: {
             classes () {
@@ -45,8 +40,7 @@
                         [`${prefixCls}-${this.type}`]: !!this.type,
                         [`${prefixCls}-${this.type}-${this.align}`]: !!this.align,
                         [`${prefixCls}-${this.type}-${this.justify}`]: !!this.justify,
-                        [`${this.className}`]: !!this.className,
-                        [`${prefixCls}-${this.type}-${this.wrap}`]: this.wrap,
+                        [`${this.className}`]: !!this.className
                     }
                 ];
             },
@@ -64,17 +58,11 @@
         },
         methods: {
             updateGutter (val) {
-                // 这里会嵌套寻找，把 Col 里的 Row 里的 Col 也找到，所以用 兄弟找
-//                const Cols = findComponentsDownward(this, 'iCol');
-                const Col = findComponentDownward(this, 'iCol');
-                const Cols = findBrothersComponents(Col, 'iCol', false);
-                if (Cols.length) {
-                    Cols.forEach((child) => {
-                        if (val !== 0) {
-                            child.gutter = val;
-                        }
-                    });
-                }
+                this.$children.forEach((child) => {
+                    if (val !== 0) {
+                        child.gutter = val;
+                    }
+                });
             }
         },
         watch: {

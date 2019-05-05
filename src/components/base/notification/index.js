@@ -5,6 +5,7 @@ Notification.newInstance = properties => {
     const _props = properties || {};
 
     const Instance = new Vue({
+        data: _props,
         render (h) {
             return h(Notification, {
                 props: _props

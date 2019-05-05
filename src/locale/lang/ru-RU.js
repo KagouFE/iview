@@ -1,8 +1,5 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'ru-RU',
         select: {
             placeholder: 'Выбрать',
             noMatch: 'Нет соответствующих данных',
@@ -22,7 +19,6 @@ const lang = {
             endTime: 'Конечное время',
             clear: 'Очистить',
             ok: 'OK',
-            datePanelLabel: '[Mmmm] [yyyy]',
             month: '',
             month1: 'Январь',
             month2: 'Февраль',
@@ -37,7 +33,6 @@ const lang = {
             month11: 'Ноябрь',
             month12: 'Декабрь',
             year: '',
-            weekStartDay: '1',
             weeks: {
                 sun: 'Вс',
                 mon: 'Пн',
@@ -68,7 +63,7 @@ const lang = {
                 target: 'Цель'
             },
             filterPlaceholder: 'Искать здесь',
-            notFoundText: 'Не найдено'
+            notFoundText: 'Не Найдено'
         },
         modal: {
             okText: 'OK',
@@ -86,8 +81,8 @@ const lang = {
             items: 'пункты',
             prev5: 'Пред. 5 страниц',
             next5: 'След. 5 страниц',
-            page: ' на странице',
-            goto: 'Перейти к',
+            page: '/page',
+            goto: 'Идти к',
             p: ''
         },
         rate: {
@@ -99,7 +94,3 @@ const lang = {
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

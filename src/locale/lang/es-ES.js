@@ -1,8 +1,5 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'es-ES',
         select: {
             placeholder: 'Seleccionar',
             noMatch: 'Sin coincidencias',
@@ -22,7 +19,6 @@ const lang = {
             endTime: 'Hora de fin',
             clear: 'Limpiar',
             ok: 'Aceptar',
-            datePanelLabel: '[mmmm] [yyyy]',
             month: 'Mes',
             month1: 'Enero',
             month2: 'Febrero',
@@ -35,17 +31,16 @@ const lang = {
             month9: 'Septiembre',
             month10: 'Octubre',
             month11: 'Noviembre',
-            month12: 'Diciembre',
+            month12: 'Deciembre',
             year: 'Año',
-            weekStartDay: '1',
             weeks: {
-                sun: 'Dom',
-                mon: 'Lun',
-                tue: 'Mar',
-                wed: 'Mié',
-                thu: 'Jue',
-                fri: 'Vie',
-                sat: 'Sáb'
+                sun: 'Domingo',
+                mon: 'Lunes',
+                tue: 'Martes',
+                wed: 'Miércoles',
+                thu: 'Jueves',
+                fri: 'Viernes',
+                sat: 'Sábado'
             },
             months: {
                 m1: 'Ene',
@@ -99,7 +94,3 @@ const lang = {
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

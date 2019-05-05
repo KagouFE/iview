@@ -10,7 +10,6 @@
     color: @text-color;
     font-size: @font-size-base;
     position: relative;
-    z-index: @zindex-select;
 
     &-horizontal{
         height: 60px;
@@ -66,12 +65,6 @@
         cursor: pointer;
         transition: all @transition-time @ease-in-out;
     }
-    a&-item{
-        color: inherit;
-        &:hover, &:active{
-            color: inherit;
-        }
-    }
     &-item > i{
         margin-right: 6px;
     }
@@ -111,7 +104,7 @@
     &-primary&-horizontal &-item, &-primary&-horizontal &-submenu{
         color: #fff;
         &-active, &:hover{
-            //background: @link-active-color;
+            background: @link-active-color;
         }
     }
 
@@ -154,8 +147,7 @@
         transition: all @transition-time @ease-in-out;
 
         &:hover{
-            //background: @background-color-select-hover;
-            color: @primary-color;
+            background: @background-color-select-hover;
         }
     }
 
@@ -167,17 +159,12 @@
     &-submenu-title-icon {
         transition: transform @transition-time @ease-in-out;
     }
-    &-opened > * > &-submenu-title-icon{
+    &-opened &-submenu-title-icon{
         transform: rotate(180deg);
     }
 
-    &-vertical &-submenu{
-        &-nested{
-            padding-left: 20px;
-        }
-        .@{menu-prefix-cls}-item{
-            padding-left: 43px;
-        }
+    &-vertical &-submenu &-item{
+        padding-left: 43px;
     }
     &-vertical &-item-group{
         &-title{
@@ -194,22 +181,11 @@
     }
 
     &-light&-vertical &-item{
-        //border-right: 2px solid transparent;
+        border-right: 2px solid transparent;
         &-active:not(.@{menu-prefix-cls}-submenu){
             color: @primary-color;
-            background: ~`colorPalette("@{primary-color}", 1)`;
-            //border-right: 2px solid @primary-color;
+            border-right: 2px solid @primary-color;
             z-index: 2;
-            &:after{
-                content: '';
-                display: block;
-                width: 2px;
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                right: 0;
-                background: @primary-color;
-            }
         }
     }
 
@@ -226,7 +202,7 @@
         }
         &-active:not(.@{menu-prefix-cls}-submenu){
             color: @primary-color;
-            //border-right: 2px solid @primary-color;
+            border-right: 2px solid @primary-color;
         }
     }
     &-dark&-vertical &-submenu &-item{
@@ -240,10 +216,7 @@
             background: @primary-color !important;
         }
     }
-    // &-dark&-vertical &-item-active &-submenu-title{
-    //     color: #fff;
-    // }
-    &-dark&-vertical &-child-item-active > &-submenu-title{
+    &-dark&-vertical &-item-active &-submenu-title{
         color: #fff;
     }
 
@@ -251,12 +224,6 @@
         background: @menu-dark-active-bg;
         .@{menu-prefix-cls}-submenu-title{
             background: @menu-dark-title;
-        }
-
-        .@{menu-prefix-cls}-submenu-has-parent-submenu{
-            .@{menu-prefix-cls}-submenu-title{
-                background: transparent;
-            }
         }
     }
 }

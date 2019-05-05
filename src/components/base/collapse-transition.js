@@ -1,3 +1,5 @@
+// Thanks to https://github.com/ElemeFE/element/blob/dev/src/transitions/collapse-transition.js
+
 import { addClass, removeClass } from '../../utils/assist';
 
 const Transition = {

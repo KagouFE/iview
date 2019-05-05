@@ -66,19 +66,19 @@
     }
 
     & .@{btnClassName}-icon-only .ivu-icon {
-        font-size: 13px;
+        font-size: 14px;
         position: relative;
-        //top: 1px;
+        top: 1px;
     }
 
     &-large .@{btnClassName}-icon-only .ivu-icon{
-        font-size: 15px;
-        //top: 2px;
+        font-size: 16px;
+        top: 2px;
     }
 
     &-small .@{btnClassName}-icon-only .ivu-icon{
         font-size: 12px;
-        //top: 0;
+        top: 0;
     }
 
     &-circle .@{btnClassName} {
@@ -106,13 +106,6 @@
             }
         }
     }
-
-    //&-small .@{btnClassName}-icon-only{
-    //    .button-size(@btn-padding-small-icon; @btn-font-size; @btn-border-radius-small);
-    //}
-    //&-large .@{btnClassName}-icon-only{
-    //    .button-size(@btn-padding-large-icon; @btn-font-size-large; @btn-border-radius);
-    //}
 }
 
 .button-group-vertical-base(@btnClassName) {
@@ -127,7 +120,6 @@
 }
 
 .btn() {
-    position: relative;
     display: inline-block;
     margin-bottom: 0;
     font-weight: @btn-font-weight;
@@ -143,19 +135,10 @@
     .button-size(@btn-padding-base; @btn-font-size; @btn-border-radius);
     //transform: translate3d(0, 0, 0);
     //transition: all @transition-time linear;
-    transition: color @transition-time linear, background-color @transition-time linear, border @transition-time linear, box-shadow @transition-time linear;
+    transition: color @transition-time linear, background-color @transition-time linear, border @transition-time linear;
 
     > .@{css-prefix-iconfont} {
-        line-height: @line-height-base;
-        vertical-align: middle;
-    }
-
-    &-icon-only&-circle > .@{css-prefix-iconfont}{
-        vertical-align: baseline;
-    }
-
-    > span{
-        vertical-align: middle;
+        line-height: 1;
     }
 
     &,
@@ -170,7 +153,7 @@
 
     &:not([disabled]):active {
         outline: 0;
-        // transition: none;  // 如果不注释此行，那么active会和focus同时触发，此时focus的开始动画transition会无效
+        transition: none;
     }
 
     &.disabled,
@@ -181,30 +164,12 @@
         }
     }
 
-    & + & {
-        margin-left: 4px;
-    }
-
     &-large {
         .button-size(@btn-padding-large; @btn-font-size-large; @btn-border-radius);
-
-        & + & {
-            margin-left: 8px;
-        }
     }
 
     &-small {
         .button-size(@btn-padding-small; @btn-font-size; @btn-border-radius-small);
-    }
-
-    &-icon-only{
-        .button-size(@btn-padding-base-icon; @btn-font-size; @btn-border-radius);
-    }
-    &-icon-only&-small{
-        .button-size(@btn-padding-small-icon; @btn-font-size; @btn-border-radius-small);
-    }
-    &-icon-only&-large{
-        .button-size(@btn-padding-large-icon; @btn-font-size-large; @btn-border-radius);
     }
 }
 
@@ -212,8 +177,8 @@
 .btn-default() {
     .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
 
-    &:hover,
-        &:focus
+    &:hover
+    //&:focus
     {
         .button-color(tint(@primary-color, 20%); white; tint(@primary-color, 20%));
     }
@@ -221,7 +186,6 @@
     &.active {
         .button-color(shade(@primary-color, 5%); white; shade(@primary-color, 5%));
     }
-    //.active-btn-color(tint(@primary-color, 20%); white; tint(@primary-color, 20%));
 }
 
 // Primary
@@ -234,12 +198,6 @@
     &.active {
         color: @btn-primary-color;
     }
-
-    .@{ripple-prefix-cls}__item {
-        background: #fff;
-        opacity: .7;
-    }
-    //.active-btn-color( @btn-primary-color, tint(@btn-primary-bg, 20%), tint(@btn-primary-bg, 20%));
 }
 
 // Ghost
@@ -255,21 +213,6 @@
     &.active {
         .button-color(shade(@primary-color, 5%); @btn-ghost-bg; shade(@primary-color, 5%));
     }
-    //.active-btn-color(tint(@primary-color, 20%); @btn-ghost-bg; tint(@primary-color, 20%));
-}
-
-.button-variant-ghost (@color) {
-    .button-variant(@color, @btn-ghost-bg, @color);
-
-    &:hover
-    //&:focus
-    {
-        .button-color(tint(@color, 20%); @btn-ghost-bg; tint(@color, 20%));
-    }
-    &:active,
-    &.active {
-        .button-color(shade(@color, 5%); @btn-ghost-bg; shade(@color, 5%));
-    }
 }
 
 // Dashed
@@ -277,8 +220,8 @@
     .button-variant(@btn-ghost-color, @btn-ghost-bg, @btn-ghost-border);
     border-style: dashed;
 
-    &:hover,
-    &:focus
+    &:hover
+    //&:focus
     {
         .button-color(tint(@primary-color, 20%); @btn-ghost-bg; tint(@primary-color, 20%));
     }
@@ -286,41 +229,11 @@
     &.active {
         .button-color(shade(@primary-color, 5%); @btn-ghost-bg; shade(@primary-color, 5%));
     }
-    //.active-btn-color(tint(@primary-color, 20%); @btn-ghost-bg; tint(@primary-color, 20%));
 }
 
 // Text
 .btn-text() {
-    .button-variant(@btn-ghost-color, transparent, transparent);
-
-    // for disabled
-    &.disabled,
-    &[disabled],
-    fieldset[disabled] & {
-        &,
-        &:hover,
-        &:focus,
-        &:active,
-        &.active {
-            .button-color(@btn-disable-color; @btn-ghost-bg; transparent);
-        }
-    }
-
-    &:hover,
-    &:focus
-    {
-        .button-color(tint(@primary-color, 20%); shade(@btn-ghost-bg, 4%); transparent);
-    }
-    &:active,
-    &.active {
-        .button-color(shade(@primary-color, 5%); shade(@btn-ghost-bg, 8%); transparent);
-    }
-    //.active-btn-color(tint(@primary-color, 20%); shade(@btn-ghost-bg, 4%); transparent);
-}
-
-// Link add by FEN
-.btn-link() {
-    .button-variant(@link-color, @btn-ghost-bg, transparent);
+    .button-variant(@btn-ghost-color, @btn-ghost-bg, transparent);
 
     // for disabled
     &.disabled,
@@ -338,51 +251,15 @@
     &:hover
         //&:focus
     {
-        .button-color(@link-hover-color; @btn-ghost-bg; transparent);
+        .button-color(tint(@primary-color, 20%); @btn-ghost-bg; transparent);
     }
     &:active,
     &.active {
-        .button-color(@link-active-color; @btn-ghost-bg; transparent);
+        .button-color(shade(@primary-color, 5%); @btn-ghost-bg; transparent);
     }
-    //.active-btn-color(@primary-color);
-}
-
-.btn-secondary() {
-    .button-variant(@btn-secondary-color, @btn-secondary-bg, @btn-secondary-border);
-
-    // for disabled
-    &.disabled,
-    &[disabled],
-    fieldset[disabled] & {
-        &,
-        &:hover,
-        &:focus,
-        &:active,
-        &.active {
-            .button-color(@btn-disable-color; @btn-disable-bg; transparent);
-        }
-    }
-
-    &:hover,
-    &:focus
-    {
-        .button-color(shade(@btn-secondary-color, 20%); @btn-secondary-bg; shade(@btn-secondary-border, 20%));
-    }
-    &:active,
-    &.active {
-        .button-color(tint(@btn-secondary-color, 5%); tint(@btn-secondary-bg, 5%); tint(@btn-secondary-border, 5%));
-    }
-    //.active-btn-color(@primary-color);
 }
 
 // Color
-// for tabindex
-.active-btn-color(@color, @background: #fff, @border: transparent) {
-    &:focus {
-        //box-shadow: 0 0 0 2px fade(@color, 20%);
-        .button-color(@color; @background; @border);
-    }
-}
 .btn-color(@color) {
     .button-variant(@btn-primary-color; @color; @color);
 
@@ -392,18 +269,13 @@
     &.active {
         color: @btn-primary-color;
     }
-
-    .@{ripple-prefix-cls}__item {
-        background: #fff;
-        opacity: .7;
-    }
 }
 
 // Circle for Icon
 .btn-circle(@btnClassName: ivu-btn) {
     border-radius: @btn-circle-size;
 
-    &.@{btnClassName}-large {
+    &.@{btnClassName}-large{
         border-radius: @btn-circle-size-large;
     }
 

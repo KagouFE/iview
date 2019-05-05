@@ -1,7 +1,8 @@
 <template>
-    <form :class="classes" :autocomplete="autocomplete"><slot></slot></form>
+    <form :class="classes" @submit="formSubmit"><slot></slot></form>
 </template>
 <script>
+    // https://github.com/ElemeFE/element/blob/dev/packages/form/src/form.vue
     import { oneOf } from '../../utils/assist';
 
     const prefixCls = 'ivu-form';
@@ -18,10 +19,6 @@
             labelWidth: {
                 type: Number
             },
-            size: {
-                type: String,
-                default: ''
-            },
             labelPosition: {
                 validator (value) {
                     return oneOf(value, ['left', 'right', 'top']);
@@ -35,24 +32,7 @@
             showMessage: {
                 type: Boolean,
                 default: true
-            },
-            compact: {
-                type: Boolean,
-                default: false
-            },
-            text: {
-                type: Boolean,
-                default: false
-            },
-            autocomplete: {
-                validator (value) {
-                    return oneOf(value, ['on', 'off']);
-                },
-                default: 'off'
             }
-        },
-        provide() {
-            return { form : this };
         },
         data () {
             return {
@@ -65,9 +45,7 @@
                     `${prefixCls}`,
                     `${prefixCls}-label-${this.labelPosition}`,
                     {
-                        [`${prefixCls}-inline`]: this.inline,
-                        [`${prefixCls}-text`]: this.text,
-                        [`${prefixCls}-compact`]: this.compact
+                        [`${prefixCls}-inline`]: this.inline
                     }
                 ];
             }
@@ -79,22 +57,16 @@
                 });
             },
             validate(callback) {
-                return new Promise(resolve => {
-                    let valid = true;
-                    let count = 0;
-                    this.fields.forEach(field => {
-                        field.validate('', errors => {
-                            if (errors) {
-                                valid = false;
-                            }
-                            if (++count === this.fields.length) {
-                                // all finish
-                                resolve(valid);
-                                if (typeof callback === 'function') {
-                                    callback(valid);
-                                }
-                            }
-                        });
+                let valid = true;
+                let count = 0;
+                this.fields.forEach(field => {
+                    field.validate('', errors => {
+                        if (errors) {
+                            valid = false;
+                        }
+                        if (typeof callback === 'function' && ++count === this.fields.length) {
+                            callback(valid);
+                        }
                     });
                 });
             },
@@ -103,6 +75,9 @@
                 if (!field) { throw new Error('[iView warn]: must call validateField with valid prop string!'); }
 
                 field.validate('', cb);
+            },
+            formSubmit (event) {
+                event.preventDefault();
             }
         },
         watch: {

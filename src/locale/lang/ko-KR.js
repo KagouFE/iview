@@ -1,8 +1,5 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'ko-KR',
         select: {
             placeholder: '선택',
             noMatch: '일치하는 데이터 없음',
@@ -22,7 +19,6 @@ const lang = {
             endTime: '종료 시간',
             clear: '삭제',
             ok: '예',
-            datePanelLabel: '[yyyy년] [m월]',
             month: '월',
             month1: '1월',
             month2: '2월',
@@ -37,7 +33,6 @@ const lang = {
             month11: '11월',
             month12: '12월',
             year: '년',
-            weekStartDay: '0',
             weeks: {
                 sun: '일',
                 mon: '월',
@@ -94,21 +89,8 @@ const lang = {
             star: '중요',
             stars: '중요'
         },
-        time: {
-            before: ' 전',
-            after: ' 후',
-            just: '방금',
-            seconds: ' 초',
-            minutes: ' 분',
-            hours: ' 시간',
-            days: ' 일'
-        },
         tree: {
             emptyText: '데이터 없음'
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

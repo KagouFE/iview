@@ -238,11 +238,6 @@
             },
             handleRightCheckedKeysChange (keys) {
                 this.rightCheckedKeys = keys;
-            },
-            handleCheckedKeys () {
-                const sourceSelectedKeys = this.getValidKeys('left');
-                const targetSelectedKeys = this.getValidKeys('right');
-                this.$emit('on-selected-change', sourceSelectedKeys, targetSelectedKeys);
             }
         },
         watch: {

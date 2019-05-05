@@ -1,45 +1,44 @@
 <template>
     <div :class="wrapClasses">
-        <div :class="handlerClasses" v-if="showHandler">
+        <div :class="handlerClasses">
             <a
                 @click="up"
+                @mouse.down="preventDefault"
                 :class="upClasses">
                 <span :class="innerUpClasses" @click="preventDefault"></span>
             </a>
             <a
                 @click="down"
+                @mouse.down="preventDefault"
                 :class="downClasses">
                 <span :class="innerDownClasses" @click="preventDefault"></span>
             </a>
         </div>
         <div :class="inputWrapClasses">
             <input
-                :id="elementId"
                 :class="inputClasses"
                 :disabled="disabled"
                 autocomplete="off"
-                spellcheck="false"
                 :autofocus="autofocus"
                 @focus="focus"
                 @blur="blur"
                 @keydown.stop="keyDown"
-                @input="change"
-                @mouseup="preventDefault"
                 @change="change"
-                :readonly="readonly || !editable"
                 :name="name"
-                :value="formatterValue"
-                :placeholder="placeholder">
+                :value="currentValue">
         </div>
     </div>
 </template>
 <script>
-    import { oneOf, findComponentUpward } from '../../utils/assist';
+    import { oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
 
     const prefixCls = 'ivu-input-number';
     const iconPrefixCls = 'ivu-icon';
 
+    function isValueNumber (value) {
+        return (/(^-?[0-9]+\.{1}\d+$)|(^-?[1-9][0-9]*$)|(^-?0{1}$)/).test(value + '');
+    }
     function addNum (num1, num2) {
         let sq1, sq2, m;
         try {
@@ -68,11 +67,6 @@
         name: 'InputNumber',
         mixins: [ Emitter ],
         props: {
-            'show-handler': {
-                validator (value) {
-                    return oneOf(value, [false, true, 'hover']);
-                }
-            },
             max: {
                 type: Number,
                 default: Infinity
@@ -85,19 +79,13 @@
                 type: Number,
                 default: 1
             },
-            activeChange: {
-                type: Boolean,
-                default: true
-            },
             value: {
-                type: Number
+                type: Number,
+                default: 1
             },
             size: {
                 validator (value) {
-                    return oneOf(value, ['small', 'large', 'default']);
-                },
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
+                    return oneOf(value, ['small', 'large']);
                 }
             },
             disabled: {
@@ -108,33 +96,9 @@
                 type: Boolean,
                 default: false
             },
-            readonly: {
-                type: Boolean,
-                default: false
-            },
-            editable: {
-                type: Boolean,
-                default: true
-            },
             name: {
                 type: String
-            },
-            precision: {
-                type: Number
-            },
-            elementId: {
-                type: String
-            },
-            formatter: {
-                type: Function
-            },
-            parser: {
-                type: Function
-            },
-            placeholder: {
-                type: String,
-                default: ''
-            },
+            }
         },
         data () {
             return {
@@ -151,8 +115,7 @@
                     {
                         [`${prefixCls}-${this.size}`]: !!this.size,
                         [`${prefixCls}-disabled`]: this.disabled,
-                        [`${prefixCls}-focused`]: this.focused,
-                        [`${prefixCls}--show-handler`]: this.showHandler === true
+                        [`${prefixCls}-focused`]: this.focused
                     }
                 ];
             },
@@ -188,18 +151,6 @@
             },
             inputClasses () {
                 return `${prefixCls}-input`;
-            },
-            precisionValue () {
-                // can not display 1.0
-                if(!this.currentValue) return this.currentValue;
-                return this.precision ? this.currentValue.toFixed(this.precision) : this.currentValue;
-            },
-            formatterValue () {
-                if (this.formatter && this.precisionValue !== null) {
-                    return this.formatter(this.precisionValue);
-                } else {
-                    return this.precisionValue;
-                }
             }
         },
         methods: {
@@ -221,7 +172,7 @@
                 this.changeStep('down', e);
             },
             changeStep (type, e) {
-                if (this.disabled || this.readonly) {
+                if (this.disabled) {
                     return false;
                 }
 
@@ -257,18 +208,6 @@
                 this.setValue(val);
             },
             setValue (val) {
-                // 如果 step 是小数，且没有设置 precision，是有问题的
-                if (val && !isNaN(this.precision)) val = Number(Number(val).toFixed(this.precision));
-
-                const {min, max} = this;
-                if (val!==null) {
-                    if (val > max) {
-                        val = max;
-                    } else if (val < min) {
-                        val = min;
-                    }
-                }
-
                 this.$nextTick(() => {
                     this.currentValue = val;
                     this.$emit('input', val);
@@ -276,16 +215,11 @@
                     this.dispatch('FormItem', 'on-form-change', val);
                 });
             },
-            focus (event) {
+            focus () {
                 this.focused = true;
-                this.$emit('on-focus', event);
             },
             blur () {
                 this.focused = false;
-                this.$emit('on-blur');
-                if (!findComponentUpward(this, ['DatePicker', 'TimePicker', 'Cascader', 'Search'])) {
-                    this.dispatch('FormItem', 'on-form-blur', this.currentValue);
-                }
             },
             keyDown (e) {
                 if (e.keyCode === 38) {
@@ -297,37 +231,29 @@
                 }
             },
             change (event) {
-
-                if (event.type == 'input' && !this.activeChange) return;
                 let val = event.target.value.trim();
-                if (this.parser) {
-                    val = this.parser(val);
-                }
 
-                if(val === '') this.setValue(null); // Add By FEN 当回退到空值的时候让输入框的值为空，而不是 0
+                const max = this.max;
+                const min = this.min;
 
-                if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return; // prevent fire early if decimal. If no more input the change event will fire later
-
-                const {min, max} = this;
-                const isEmptyString = val.length === 0;
-                if(isEmptyString){
-                    this.setValue(null);
-                    return;
-                }
-                if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return; // prevent fire early if decimal. If no more input the change event will fire later
-
-                val = Number(val);
-
-                if (!isNaN(val)) {
+                if (isValueNumber(val)) {
+                    val = Number(val);
                     this.currentValue = val;
-                    this.setValue(val);
+
+                    if (val > max) {
+                        this.setValue(max);
+                    } else if (val < min) {
+                        this.setValue(min);
+                    } else {
+                        this.setValue(val);
+                    }
                 } else {
                     event.target.value = this.currentValue;
                 }
             },
             changeVal (val) {
-                val = Number(val);
-                if (!isNaN(val)) {
+                if (isValueNumber(val) || val === 0) {
+                    val = Number(val);
                     const step = this.step;
 
                     this.upDisabled = val + step > this.max;

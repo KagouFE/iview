@@ -1,5 +1,5 @@
 <template>
-    <i :class="classes" :style="styles" @click="handleClick"></i>
+    <i :class="classes" :style="styles"></i>
 </template>
 <script>
     const prefixCls = 'ivu-icon';
@@ -7,26 +7,13 @@
     export default {
         name: 'Icon',
         props: {
-            type: {
-                type: String,
-                default: ''
-            },
+            type: String,
             size: [Number, String],
-            color: String,
-            custom: {
-                type: String,
-                default: ''
-            }
+            color: String
         },
         computed: {
             classes () {
-                return [
-                    `${prefixCls}`,
-                    {
-                        [`${prefixCls}-${this.type}`]: this.type !== '',
-                        [`${this.custom}`]: this.custom !== '',
-                    }
-                ];
+                return `${prefixCls} ${prefixCls}-${this.type}`;
             },
             styles () {
                 let style = {};
@@ -40,11 +27,6 @@
                 }
 
                 return style;
-            }
-        },
-        methods: {
-            handleClick (event) {
-                this.$emit('click', event);
             }
         }
     };

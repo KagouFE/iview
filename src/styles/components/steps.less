@@ -10,20 +10,10 @@
     width: 100%;
     line-height: 1.5;
 
-    // add by fen 用于多行展示
-    &:after{
-        display: block;
-        content: '';
-        height:0;
-        margin-top:-24px;
-    }
-    // - end -
-
     &-item{
         display: inline-block;
         position: relative;
         vertical-align: top;
-        margin-bottom:24px;// add by fen 用于多行展示
 
         &.@{steps-prefix-cls}-status-wait{
             .@{steps-prefix-cls}-head-inner {
@@ -44,8 +34,8 @@
         }
         &.@{steps-prefix-cls}-status-process {
             .@{steps-prefix-cls}-head-inner {
-                border-color: @success-color;
-                background-color: @success-color;
+                border-color: @primary-color;
+                background-color: @primary-color;
                 > .@{steps-prefix-cls}-icon, span {
                     color: #fff;
                 }
@@ -63,14 +53,14 @@
         &.@{steps-prefix-cls}-status-finish {
             .@{steps-prefix-cls}-head-inner {
                 background-color: #fff;
-                border-color: @success-color;
+                border-color: @primary-color;
                 > .@{steps-prefix-cls}-icon, span {
-                    color: @success-color;
+                    color: @primary-color;
                 }
             }
             .@{steps-prefix-cls}-tail > i:after {
                 width: 100%;
-                background: @success-color;
+                background: @primary-color;
                 transition: all @transition-time @ease-in-out;
                 opacity: 1;
             }
@@ -123,7 +113,7 @@
             }
             &.@{steps-prefix-cls}-status-process {
                 .@{steps-prefix-cls}-head-inner > .@{steps-prefix-cls}-icon {
-                    color: @success-color;
+                    color: @primary-color;
                 }
             }
         }
@@ -238,17 +228,7 @@
                 font-size: 16px;
                 top: 0;
             }
-
-
         }
-        // add by fen 用于多行展示
-        &:after {
-            margin-top:-16px;
-        }
-        .@{steps-prefix-cls}-item{
-            margin-bottom:16px;
-        }
-        // ----
         .@{steps-prefix-cls}-main {
             margin-top: 0;
         }
