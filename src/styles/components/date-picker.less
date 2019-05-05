@@ -2,7 +2,6 @@
 @picker-prefix-cls: ~"@{css-prefix}picker";
 
 @date-picker-cells-width: 196px;
-@date-picker-cells-width-with-weeknumbers: 226px;
 
 .@{date-picker-prefix-cls} {
     //position: relative;
@@ -44,22 +43,16 @@
             margin: 2px;
             color: @btn-disable-color;
         }
-        &-cell:hover{
-            em{
-                background: @date-picker-cell-hover-bg;
-            }
-        }
-        &-focused{
-            em{
-                box-shadow: 0 0 0 1px @primary-color inset;
-            }
-        }
-        
         &-cell{
             span&{
                 width: 28px;
                 height: 28px;
                 cursor: pointer;
+            }
+            &:hover{
+                em{
+                    background: @date-picker-cell-hover-bg;
+                }
             }
             &-prev-month,&-next-month{
                 em{
@@ -71,16 +64,14 @@
                     }
                 }
             }
-            span&-week-label,span&-week-label:hover,span&-disabled,span&-disabled:hover{
+            span&-disabled,span&-disabled:hover{
                 cursor: @cursor-disabled;
+                background: @btn-disable-bg;
                 color: @btn-disable-color;
                 em{
                     color: inherit;
                     background: inherit;
                 }
-            }
-            span&-disabled,span&-disabled:hover{
-                background: @btn-disable-bg;
             }
             &-today{
                 em {
@@ -141,10 +132,6 @@
         }
     }
 
-    &-cells-show-week-numbers {
-        width: @date-picker-cells-width-with-weeknumbers;
-    }
-
     &-cells-year,&-cells-month{
         margin-top: 14px;
         span{
@@ -160,11 +147,6 @@
                 margin: 0;
             }
         }
-
-        .@{date-picker-prefix-cls}-cells-cell-focused{
-            background-color: tint(@primary-color, 80%);
-        }
-
     }
 
     &-header{
@@ -180,18 +162,12 @@
             }
         }
     }
-    &-btn-pulse{
-        background-color: tint(@primary-color, 80%) !important;
-        border-radius: @border-radius-small;
-        transition: background-color @transition-time @ease-in-out;
-    }
     &-prev-btn{
         float: left;
         &-arrow-double{
             margin-left: 10px;
             i:after{
-                content: "\F115";
-                margin-left: -8px;
+                content: "\F3D2";
             }
         }
     }
@@ -200,8 +176,7 @@
         &-arrow-double{
             margin-right: 10px;
             i:after{
-                content: "\F11F";
-                margin-left: -8px;
+                content: "\F3D3";
             }
         }
     }
@@ -215,28 +190,10 @@
                 float: left;
             }
         }
-        .@{picker-prefix-cls}-cells-show-week-numbers {
-            min-width: (@date-picker-cells-width-with-weeknumbers + 20) * 2;
-        }
-
     }
-
-    &-with-week-numbers{
-        .@{picker-prefix-cls}-panel{
-            &-body-date {
-                min-width: (@date-picker-cells-width-with-weeknumbers + 20) * 2;
-            }
-        }
-    }
-
     &-transfer{
         z-index: @zindex-transfer;
         max-height: none;
-        width: auto;
-    }
-
-    &-focused input{
-        .active();
     }
 }
 
@@ -311,9 +268,9 @@
                 color: @link-active-color;
             }
         }
-
-        &-time{
-            float: left;
+        & > span&-time-disabled{
+            color: @btn-disable-color;
+            cursor: @cursor-disabled;
         }
     }
 }

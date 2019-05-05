@@ -2,7 +2,7 @@
     <ul :class="classes" :style="styles"><slot></slot></ul>
 </template>
 <script>
-    import { oneOf, findComponentsDownward, findComponentsUpward } from '../../utils/assist';
+    import { oneOf, findComponentsDownward } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
 
     const prefixCls = 'ivu-menu';
@@ -43,8 +43,7 @@
         },
         data () {
             return {
-                currentActiveName: this.activeName,
-                openedNames: []
+                currentActiveName: this.activeName
             };
         },
         computed: {
@@ -77,64 +76,29 @@
                 this.broadcast('MenuItem', 'on-update-active-name', this.currentActiveName);
             },
             updateOpenKeys (name) {
-                let names = [...this.openedNames];
-                const index = names.indexOf(name);
-                if (this.accordion) findComponentsDownward(this, 'Submenu').forEach(item => {
-                    item.opened = false;
-                });
-                if (index >= 0) {
-                    let currentSubmenu = null;
-                    findComponentsDownward(this, 'Submenu').forEach(item => {
-                        if (item.name === name) {
-                            currentSubmenu = item;
-                            item.opened = false;
-                        }
-                    });
-                    findComponentsUpward(currentSubmenu, 'Submenu').forEach(item => {
-                        item.opened = true;
-                    });
-                    findComponentsDownward(currentSubmenu, 'Submenu').forEach(item => {
-                        item.opened = false;
-                    });
+                const index = this.openNames.indexOf(name);
+                if (index > -1) {
+                    this.openNames.splice(index, 1);
                 } else {
+                    this.openNames.push(name);
                     if (this.accordion) {
-                        let currentSubmenu = null;
-                        findComponentsDownward(this, 'Submenu').forEach(item => {
-                            if (item.name === name) {
-                                currentSubmenu = item;
-                                item.opened = true;
-                            }
-                        });
-                        findComponentsUpward(currentSubmenu, 'Submenu').forEach(item => {
-                            item.opened = true;
-                        });
-                    } else {
-                        findComponentsDownward(this, 'Submenu').forEach(item => {
-                            if (item.name === name) item.opened = true;
-                        });
+                        this.openNames.splice(0, this.openNames.length);
+                        this.openNames.push(name);
                     }
                 }
-                let openedNames = findComponentsDownward(this, 'Submenu').filter(item => item.opened).map(item => item.name);
-                this.openedNames = [...openedNames];
-                this.$emit('on-open-change', openedNames);
             },
             updateOpened () {
                 const items = findComponentsDownward(this, 'Submenu');
 
                 if (items.length) {
                     items.forEach(item => {
-                        if (this.openedNames.indexOf(item.name) > -1) item.opened = true;
-                        else item.opened = false;
+                        if (this.openNames.indexOf(item.name) > -1) item.opened = true;
                     });
                 }
-            },
-            handleEmitSelectEvent (name) {
-                this.$emit('on-select', name);
             }
         },
         mounted () {
             this.updateActiveName();
-            this.openedNames = [...this.openNames];
             this.updateOpened();
             this.$on('on-menu-item-select', (name) => {
                 this.currentActiveName = name;
@@ -142,8 +106,8 @@
             });
         },
         watch: {
-            openNames (names) {
-                this.openedNames = names;
+            openNames () {
+                this.$emit('on-open-change', this.openNames);
             },
             activeName (val) {
                 this.currentActiveName = val;

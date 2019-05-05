@@ -1,24 +1,22 @@
 <template>
     <div :class="classes">
-        <button type="button" :class="arrowClasses" class="left" @click="arrowEvent(-1)">
-            <Icon type="ios-arrow-back"></Icon>
+        <button :class="arrowClasses" class="left" @click="arrowEvent(-1)">
+            <Icon type="chevron-left"></Icon>
         </button>
         <div :class="[prefixCls + '-list']">
-            <div :class="[prefixCls + '-track', showCopyTrack ? '' : 'higher']" :style="trackStyles" ref="originTrack">
+            <div :class="[prefixCls + '-track']" :style="trackStyles">
                 <slot></slot>
             </div>
-            <div :class="[prefixCls + '-track', showCopyTrack ? 'higher' : '']" :style="copyTrackStyles" ref="copyTrack" v-if="loop">
-            </div>
         </div>
-        <button type="button" :class="arrowClasses" class="right" @click="arrowEvent(1)">
-            <Icon type="ios-arrow-forward"></Icon>
+        <button :class="arrowClasses" class="right" @click="arrowEvent(1)">
+            <Icon type="chevron-right"></Icon>
         </button>
         <ul :class="dotsClasses">
             <template v-for="n in slides.length">
                 <li :class="[n - 1 === currentIndex ? prefixCls + '-active' : '']"
                     @click="dotsEvent('click', n - 1)"
                     @mouseover="dotsEvent('hover', n - 1)">
-                    <button type="button" :class="[radiusDot ? 'radius' : '']"></button>
+                    <button></button>
                 </li>
             </template>
         </ul>
@@ -50,10 +48,6 @@
                 type: Number,
                 default: 2000
             },
-            loop: {
-                type: Boolean,
-                default: false
-            },
             easing: {
                 type: String,
                 default: 'ease'
@@ -64,10 +58,6 @@
                 validator (value) {
                     return oneOf(value, ['inside', 'outside', 'none']);
                 }
-            },
-            radiusDot: {
-                type: Boolean,
-                default: false
             },
             trigger: {
                 type: String,
@@ -94,16 +84,11 @@
                 listWidth: 0,
                 trackWidth: 0,
                 trackOffset: 0,
-                trackCopyOffset: 0,
-                showCopyTrack: false,
                 slides: [],
                 slideInstances: [],
                 timer: null,
                 ready: false,
-                currentIndex: this.value,
-                trackIndex: this.value,
-                copyTrackIndex: this.value,
-                hideTrackPos: -1, // 默认左滑
+                currentIndex: this.value
             };
         },
         computed: {
@@ -115,17 +100,8 @@
             trackStyles () {
                 return {
                     width: `${this.trackWidth}px`,
-                    transform: `translate3d(${-this.trackOffset}px, 0px, 0px)`,
+                    transform: `translate3d(-${this.trackOffset}px, 0px, 0px)`,
                     transition: `transform 500ms ${this.easing}`
-                };
-            },
-            copyTrackStyles () {
-                return {
-                    width: `${this.trackWidth}px`,
-                    transform: `translate3d(${-this.trackCopyOffset}px, 0px, 0px)`,
-                    transition: `transform 500ms ${this.easing}`,
-                    position: 'absolute',
-                    top: 0
                 };
             },
             arrowClasses () {
@@ -166,12 +142,6 @@
                     });
                 }
             },
-            // copy trackDom
-            initCopyTrackDom () {
-                this.$nextTick(() => {
-                    this.$refs.copyTrack.innerHTML = this.$refs.originTrack.innerHTML;
-                });
-            },
             updateSlides (init) {
                 let slides = [];
                 let index = 1;
@@ -188,6 +158,7 @@
                 });
 
                 this.slides = slides;
+
                 this.updatePos();
             },
             updatePos () {
@@ -214,60 +185,21 @@
                 this.updatePos();
                 this.updateOffset();
             },
-            updateTrackPos (index) {
-                if (this.showCopyTrack) {
-                    this.trackIndex = index;
-                } else {
-                    this.copyTrackIndex = index;
-                }
-            },
-            updateTrackIndex (index) {
-                if (this.showCopyTrack) {
-                    this.copyTrackIndex = index;
-                } else {
-                    this.trackIndex = index;
-                }
-                this.currentIndex = index;
-            },
             add (offset) {
-                // 获取单个轨道的图片数
-                let slidesLen = this.slides.length;
-                // 如果是无缝滚动，需要初始化双轨道位置
-                if (this.loop) {
-                    if (offset > 0) {
-                        // 初始化左滑轨道位置
-                        this.hideTrackPos = -1;
-                    } else {
-                        // 初始化右滑轨道位置
-                        this.hideTrackPos = slidesLen;
-                    }
-                    this.updateTrackPos(this.hideTrackPos);
-                }
-                // 获取当前展示图片的索引值
-                const oldIndex = this.showCopyTrack ? this.copyTrackIndex : this.trackIndex;
-                let index = oldIndex + offset;
-                while (index < 0) index += slidesLen;
-                if (((offset > 0 && index === slidesLen) || (offset < 0 && index === slidesLen - 1)) && this.loop) {
-                    // 极限值（左滑：当前索引为总图片张数， 右滑：当前索引为总图片张数 - 1）切换轨道
-                    this.showCopyTrack = !this.showCopyTrack;
-                    this.trackIndex += offset;
-                    this.copyTrackIndex += offset;
-                } else {
-                    if (!this.loop) index = index % this.slides.length;
-                    this.updateTrackIndex(index);
-                }
-                this.currentIndex = index === this.slides.length ? 0 : index;
-                this.$emit('on-change', oldIndex, this.currentIndex);
-                this.$emit('input', this.currentIndex);
+                let index = this.currentIndex;
+                index += offset;
+                while (index < 0) index += this.slides.length;
+                index = index % this.slides.length;
+                this.currentIndex = index;
+                this.$emit('input', index);
             },
             arrowEvent (offset) {
                 this.setAutoplay();
                 this.add(offset);
             },
             dotsEvent (event, n) {
-                let curIndex = this.showCopyTrack ? this.copyTrackIndex : this.trackIndex;
-                if (event === this.trigger && curIndex !== n) {
-                    this.updateTrackIndex(n);
+                if (event === this.trigger && this.currentIndex !== n) {
+                    this.currentIndex = n;
                     this.$emit('input', n);
                     // Reset autoplay timer when trigger be activated
                     this.setAutoplay();
@@ -283,10 +215,7 @@
             },
             updateOffset () {
                 this.$nextTick(() => {
-                    /* hack: revise copyTrack offset (1px) */
-                    let ofs = this.copyTrackIndex > 0 ? -1 : 1;
-                    this.trackOffset = this.trackIndex * this.listWidth;
-                    this.trackCopyOffset = this.copyTrackIndex * this.listWidth + ofs;
+                    this.trackOffset = this.currentIndex * this.listWidth;
                 });
             }
         },
@@ -297,20 +226,15 @@
             autoplaySpeed () {
                 this.setAutoplay();
             },
-            trackIndex () {
-                this.updateOffset();
-            },
-            copyTrackIndex () {
+            currentIndex (val, oldVal) {
+                this.$emit('on-change', oldVal, val);
                 this.updateOffset();
             },
             height () {
                 this.updatePos();
             },
             value (val) {
-//                this.currentIndex = val;
-//                this.trackIndex = val;
-                this.updateTrackIndex(val);
-                this.setAutoplay();
+                this.currentIndex = val;
             }
         },
         mounted () {

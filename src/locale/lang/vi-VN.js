@@ -1,8 +1,5 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'vi-VN',
         select: {
             placeholder: 'Chọn',
             noMatch: 'Không tìm thấy',
@@ -22,7 +19,6 @@ const lang = {
             endTime: 'Ngày kết thúc',
             clear: 'Xóa',
             ok: 'Đồng ý',
-            datePanelLabel: '[Tháng mm]/[yyyy]',
             month: '',
             month1: 'Tháng 1',
             month2: 'Tháng 2',
@@ -37,7 +33,6 @@ const lang = {
             month11: 'Tháng 11',
             month12: 'Tháng 12',
             year: '',
-            weekStartDay: '1',
             weeks: {
                 sun: 'CN',
                 mon: 'T2',
@@ -99,7 +94,3 @@ const lang = {
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

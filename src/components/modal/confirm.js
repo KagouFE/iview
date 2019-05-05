@@ -22,8 +22,7 @@ Modal.newInstance = properties => {
             showCancel: false,
             loading: false,
             buttonLoading: false,
-            scrollable: false,
-            closable: false
+            scrollable: false
         }),
         render (h) {
             let footerVNodes = [];
@@ -64,22 +63,6 @@ Modal.newInstance = properties => {
                     }
                 }, [
                     h('div', {
-                        domProps: {
-                            innerHTML: this.body
-                        }
-                    })
-                ]);
-            }
-
-            // when render with no title, hide head
-            let head_render;
-            if (this.title) {
-                head_render = h('div', {
-                    attrs: {
-                        class: `${prefixCls}-head`
-                    }
-                }, [
-                    h('div', {
                         class: this.iconTypeCls
                     }, [
                         h('i', {
@@ -87,11 +70,8 @@ Modal.newInstance = properties => {
                         })
                     ]),
                     h('div', {
-                        attrs: {
-                            class: `${prefixCls}-head-title`
-                        },
                         domProps: {
-                            innerHTML: this.title
+                            innerHTML: this.body
                         }
                     })
                 ]);
@@ -100,8 +80,7 @@ Modal.newInstance = properties => {
             return h(Modal, {
                 props: Object.assign({}, _props, {
                     width: this.width,
-                    scrollable: this.scrollable,
-                    closable: this.closable
+                    scrollable: this.scrollable
                 }),
                 domProps: {
                     value: this.visible
@@ -109,8 +88,7 @@ Modal.newInstance = properties => {
                 on: {
                     input: (status) => {
                         this.visible = status;
-                    },
-                    'on-cancel': this.cancel
+                    }
                 }
             }, [
                 h('div', {
@@ -118,7 +96,20 @@ Modal.newInstance = properties => {
                         class: prefixCls
                     }
                 }, [
-                    head_render,
+                    h('div', {
+                        attrs: {
+                            class: `${prefixCls}-head`
+                        }
+                    }, [
+                        h('div', {
+                            attrs: {
+                                class: `${prefixCls}-head-title`
+                            },
+                            domProps: {
+                                innerHTML: this.title
+                            }
+                        })
+                    ]),
                     body_render,
                     h('div', {
                         attrs: {
@@ -131,8 +122,8 @@ Modal.newInstance = properties => {
         computed: {
             iconTypeCls () {
                 return [
-                    `${prefixCls}-head-icon`,
-                    `${prefixCls}-head-icon-${this.iconType}`
+                    `${prefixCls}-body-icon`,
+                    `${prefixCls}-body-icon-${this.iconType}`
                 ];
             },
             iconNameCls () {
@@ -199,28 +190,24 @@ Modal.newInstance = properties => {
 
             switch (props.icon) {
                 case 'info':
-                    modal.$parent.iconName = 'ios-information-circle';
+                    modal.$parent.iconName = 'information-circled';
                     break;
                 case 'success':
-                    modal.$parent.iconName = 'ios-checkmark-circle';
+                    modal.$parent.iconName = 'checkmark-circled';
                     break;
                 case 'warning':
-                    modal.$parent.iconName = 'ios-alert';
+                    modal.$parent.iconName = 'android-alert';
                     break;
                 case 'error':
-                    modal.$parent.iconName = 'ios-close-circle';
+                    modal.$parent.iconName = 'close-circled';
                     break;
                 case 'confirm':
-                    modal.$parent.iconName = 'ios-help-circle';
+                    modal.$parent.iconName = 'help-circled';
                     break;
             }
 
             if ('width' in props) {
                 modal.$parent.width = props.width;
-            }
-
-            if ('closable' in props) {
-                modal.$parent.closable = props.closable;
             }
 
             if ('title' in props) {

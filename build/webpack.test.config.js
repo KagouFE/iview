@@ -2,13 +2,14 @@
  * 用于单元测试
  */
 
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const webpackBaseConfig = require('./webpack.base.config.js');
+var webpack = require('webpack');
+var merge = require('webpack-merge');
+var webpackBaseConfig = require('./webpack.base.config.js');
 
 
-const webpackConfig = merge(webpackBaseConfig, {
-    devtool: 'eval-source-map',
+var webpackConfig = merge(webpackBaseConfig, {
+  // use inline sourcemap for karma-sourcemap-loader
+    devtool: '#inline-source-map',
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {

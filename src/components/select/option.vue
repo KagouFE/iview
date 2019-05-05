@@ -1,13 +1,8 @@
 <template>
-    <li
-        :class="classes"
-        @click.stop="select"
-        @mousedown.prevent
-    ><slot>{{ showLabel }}</slot></li>
+    <li :class="classes" @click.stop="select" @mouseout.stop="blur" v-show="!hidden"><slot>{{ showLabel }}</slot></li>
 </template>
 <script>
     import Emitter from '../../mixins/emitter';
-    import { findComponentUpward } from '../../utils/assist';
 
     const prefixCls = 'ivu-select-item';
 
@@ -26,25 +21,15 @@
             disabled: {
                 type: Boolean,
                 default: false
-            },
-            selected: {
-                type: Boolean,
-                default: false
-            },
-            isFocused: {
-                type: Boolean,
-                default: false
-            },
-            // add by fen
-            optionData: {
-                type: Object
             }
-            // end
         },
         data () {
             return {
-                searchLabel: '',  // the slot value (textContent)
-                autoComplete: false
+                selected: false,
+                index: 0,    // for up and down to focus
+                isFocus: false,
+                hidden: false,    // for search
+                searchLabel: ''    // the value is slot,only for search
             };
         },
         computed: {
@@ -53,36 +38,43 @@
                     `${prefixCls}`,
                     {
                         [`${prefixCls}-disabled`]: this.disabled,
-                        [`${prefixCls}-selected`]: this.selected && !this.autoComplete,
-                        [`${prefixCls}-focus`]: this.isFocused
+                        [`${prefixCls}-selected`]: this.selected,
+                        [`${prefixCls}-focus`]: this.isFocus
                     }
                 ];
             },
             showLabel () {
                 return (this.label) ? this.label : this.value;
-            },
-            optionLabel(){
-                return this.label || (this.$el && this.$el.textContent);
             }
         },
         methods: {
             select () {
-                if (this.disabled) return false;
+                if (this.disabled) {
+                    return false;
+                }
 
-                this.dispatch('iSelect', 'on-select-selected', {
-                    value: this.value,
-                    label: this.optionLabel,
-                    optionData: this.optionData // Add By FEN 为了适应 仓库选择后需要对不同类型的仓库做判断，需要返回整个对象
-                });
-                this.$emit('on-select-selected', {
-                    value: this.value,
-                    label: this.optionLabel,
-                });
+                this.dispatch('iSelect', 'on-select-selected', this.value);
             },
+            blur () {
+                this.isFocus = false;
+            },
+            queryChange (val) {
+                const parsedQuery = val.replace(/(\^|\(|\)|\[|\]|\$|\*|\+|\.|\?|\\|\{|\}|\|)/g, '\\$1');
+                this.hidden = !new RegExp(parsedQuery, 'i').test(this.searchLabel);
+            }
         },
         mounted () {
-            const Select = findComponentUpward(this, 'iSelect');
-            if (Select) this.autoComplete = Select.autoComplete;
+            this.searchLabel = this.$el.innerHTML;
+            this.dispatch('iSelect', 'append');
+            this.$on('on-select-close', () => {
+                this.isFocus = false;
+            });
+            this.$on('on-query-change', (val) => {
+                this.queryChange(val);
+            });
         },
+        beforeDestroy () {
+            this.dispatch('iSelect', 'remove');
+        }
     };
 </script>

@@ -2,7 +2,7 @@
     <div :class="wrapClasses">
         <div :class="outerClasses">
             <div :class="innerClasses">
-                <div :class="bgClasses" :style="bgStyle"></div><div :class="successBgClasses" :style="successBgStyle"></div>
+                <div :class="bgClasses" :style="bgStyle"></div>
             </div>
         </div>
         <span v-if="!hideInfo" :class="textClasses">
@@ -24,14 +24,9 @@
     const prefixCls = 'ivu-progress';
 
     export default {
-        name: 'Progress',
         components: { Icon },
         props: {
             percent: {
-                type: Number,
-                default: 0
-            },
-            successPercent: {
                 type: Number,
                 default: 0
             },
@@ -52,9 +47,6 @@
             vertical: {
                 type: Boolean,
                 default: false
-            },
-            strokeColor: {
-                type: String
             }
         },
         data () {
@@ -70,36 +62,21 @@
                 let type = '';
                 switch (this.currentStatus) {
                     case 'wrong':
-                        type = 'ios-close-circle';
+                        type = 'ios-close';
                         break;
                     case 'success':
-                        type = 'ios-checkmark-circle';
+                        type = 'ios-checkmark';
                         break;
                 }
 
                 return type;
             },
             bgStyle () {
-                const style =  this.vertical ? {
-                    height: `${this.percent}%`,
-                    width: `${this.strokeWidth}px`,
-                } : {
-                    width: `${this.percent}%`,
-                    height: `${this.strokeWidth}px`
-                };
-
-                if (this.strokeColor) {
-                    style['background-color'] = this.strokeColor;
-                }
-
-                return style;
-            },
-            successBgStyle () {
                 return this.vertical ? {
-                    height: `${this.successPercent}%`,
+                    height: `${this.percent}%`,
                     width: `${this.strokeWidth}px`
                 } : {
-                    width: `${this.successPercent}%`,
+                    width: `${this.percent}%`,
                     height: `${this.strokeWidth}px`
                 };
             },
@@ -128,9 +105,6 @@
             },
             bgClasses () {
                 return `${prefixCls}-bg`;
-            },
-            successBgClasses () {
-                return `${prefixCls}-success-bg`;
             }
         },
         created () {

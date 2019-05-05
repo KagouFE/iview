@@ -4,7 +4,6 @@
     </div>
 </template>
 <script>
-    import { findComponentUpward } from '../../utils/assist';
     const prefixCls = 'ivu-col';
 
     export default {
@@ -19,9 +18,7 @@
             xs: [Number, Object],
             sm: [Number, Object],
             md: [Number, Object],
-            lg: [Number, Object],
-            xl: [Number, Object],
-            xxl: [Number, Object]
+            lg: [Number, Object]
         },
         data () {
             return {
@@ -42,7 +39,7 @@
                     }
                 ];
 
-                ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'].forEach(size => {
+                ['xs', 'sm', 'md', 'lg'].forEach(size => {
                     if (typeof this[size] === 'number') {
                         classList.push(`${prefixCls}-span-${size}-${this[size]}`);
                     } else if (typeof this[size] === 'object') {
@@ -73,10 +70,7 @@
         },
         methods: {
             updateGutter () {
-                const Row = findComponentUpward(this, 'Row');
-                if (Row) {
-                    Row.updateGutter(Row.gutter);
-                }
+                this.$parent.updateGutter(this.$parent.gutter);
             }
         },
         mounted () {

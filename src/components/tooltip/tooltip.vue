@@ -5,8 +5,7 @@
         </div>
         <transition name="fade">
             <div
-                :class="[prefixCls + '-popper', prefixCls + '-' + theme]"
-                :style="dropStyles"
+                :class="[prefixCls + '-popper']"
                 ref="popper"
                 v-show="!disabled && (visible || always)"
                 @mouseenter="handleShowPopper"
@@ -15,7 +14,7 @@
                 v-transfer-dom>
                 <div :class="[prefixCls + '-content']">
                     <div :class="[prefixCls + '-arrow']"></div>
-                    <div :class="innerClasses" :style="innerStyles"><slot name="content">{{ content }}</slot></div>
+                    <div :class="[prefixCls + '-inner']"><slot name="content">{{ content }}</slot></div>
                 </div>
             </div>
         </transition>
@@ -25,7 +24,6 @@
     import Popper from '../base/popper';
     import TransferDom from '../../directives/transfer-dom';
     import { oneOf } from '../../utils/assist';
-    import { transferIndex, transferIncrease } from '../../utils/transfer-queue';
 
     const prefixCls = 'ivu-tooltip';
 
@@ -62,51 +60,13 @@
             },
             transfer: {
                 type: Boolean,
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.transfer === '' ? false : this.$IVIEW.transfer;
-                }
-            },
-            theme: {
-                validator (value) {
-                    return oneOf(value, ['dark', 'light']);
-                },
-                default: 'dark'
-            },
-            maxWidth: {
-                type: [String, Number]
+                default: false
             }
         },
         data () {
             return {
-                prefixCls: prefixCls,
-                tIndex: this.handleGetIndex()
+                prefixCls: prefixCls
             };
-        },
-        computed: {
-            innerStyles () {
-                const styles = {};
-                if (this.maxWidth) styles['max-width'] = `${this.maxWidth}px`;
-                return styles;
-            },
-            innerClasses () {
-                return [
-                    `${prefixCls}-inner`,
-                    {
-                        [`${prefixCls}-inner-with-width`]: !!this.maxWidth
-                    }
-                ];
-            },
-            dropStyles () {
-                let styles = {};
-                if (this.transfer) styles['z-index'] = 1060 + this.tIndex;
-
-                return styles;
-            }
-        },
-        watch: {
-            content () {
-                this.updatePopper();
-            }
         },
         methods: {
             handleShowPopper() {
@@ -114,7 +74,6 @@
                 this.timeout = setTimeout(() => {
                     this.visible = true;
                 }, this.delay);
-                this.tIndex = this.handleGetIndex();
             },
             handleClosePopper() {
                 if (this.timeout) {
@@ -125,15 +84,6 @@
                         }, 100);
                     }
                 }
-            },
-            handleGetIndex () {
-                transferIncrease();
-                return transferIndex;
-            },
-        },
-        mounted () {
-            if (this.always) {
-                this.updatePopper();
             }
         }
     };
