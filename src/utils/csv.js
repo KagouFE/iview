@@ -1,39 +1,25 @@
-/*
-  inspired by https://www.npmjs.com/package/react-csv-downloader
-  now removed from Github
-*/
+// https://github.com/Terminux/react-csv-downloader/blob/master/src/lib/csv.js
 
 const newLine = '\r\n';
-const appendLine = (content, row, { separator, quoted }) => {
-    const line = row.map(data => {
-        if (!quoted) return data;
-        // quote data
-        data = typeof data === 'string' ? data.replace(/"/g, '"') : data;
-        return `"${data}"`;
-    });
-    content.push(line.join(separator));
-};
 
-const defaults = {
-    separator: ',',
-    quoted: false
-};
-
-export default function csv(columns, datas, options, noHeader = false) {
-    options = Object.assign({}, defaults, options);
+export default function csv(columns, datas, separator = ',', noHeader = false) {
     let columnOrder;
     const content = [];
     const column = [];
 
     if (columns) {
         columnOrder = columns.map(v => {
-            if (typeof v === 'string') return v;
+            if (typeof v === 'string') {
+                return v;
+            }
             if (!noHeader) {
-                column.push(typeof v.title !== 'undefined' ? v.title : v.key);
+                column.push((typeof v.title !== 'undefined') ? v.title : v.key);
             }
             return v.key;
         });
-        if (column.length > 0) appendLine(content, column, options);
+        if (column.length > 0) {
+            content.push(column.join(separator));
+        }
     } else {
         columnOrder = [];
         datas.forEach(v => {
@@ -43,16 +29,26 @@ export default function csv(columns, datas, options, noHeader = false) {
         });
         if (columnOrder.length > 0) {
             columnOrder = columnOrder.filter((value, index, self) => self.indexOf(value) === index);
-            if (!noHeader) appendLine(content, columnOrder, options);
+
+            if (!noHeader) {
+                content.push(columnOrder.join(separator));
+            }
         }
     }
 
     if (Array.isArray(datas)) {
-        datas.forEach(row => {
-            if (!Array.isArray(row)) {
-                row = columnOrder.map(k => (typeof row[k] !== 'undefined' ? row[k] : ''));
+        datas.map(v => {
+            if (Array.isArray(v)) {
+                return v;
             }
-            appendLine(content, row, options);
+            return columnOrder.map(k => {
+                if (typeof v[k] !== 'undefined') {
+                    return v[k];
+                }
+                return '';
+            });
+        }).forEach(v => {
+            content.push(v.join(separator));
         });
     }
     return content.join(newLine);

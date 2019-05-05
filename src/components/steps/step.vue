@@ -1,22 +1,21 @@
 <template>
     <div :class="wrapClasses" :style="styles">
         <div :class="[prefixCls + '-tail']"><i></i></div>
-        <div :class="[prefixCls + '-head']" :style="bgStyles">
-            <div :class="[prefixCls + '-head-inner']" >
+        <div :class="[prefixCls + '-head']">
+            <div :class="[prefixCls + '-head-inner']">
                 <span v-if="!icon && currentStatus != 'finish' && currentStatus != 'error'">{{ stepNumber }}</span>
                 <span v-else :class="iconClasses"></span>
             </div>
         </div>
         <div :class="[prefixCls + '-main']">
-            <div :class="[prefixCls + '-title']" :style="bgStyles">{{ title }}</div>
-            <div v-if="content || $slots.default" :class="[prefixCls + '-content']">
-                <slot>{{ content }}</slot>
-            </div>
+            <div :class="[prefixCls + '-title']">{{ title }}</div>
+            <slot>
+                <div v-if="content" :class="[prefixCls + '-content']">{{ content }}</div>
+            </slot>
         </div>
     </div>
 </template>
 <script>
-    import Emitter from '../../mixins/emitter';
     import { oneOf } from '../../utils/assist';
 
     const prefixCls = 'ivu-steps';
@@ -24,7 +23,6 @@
 
     export default {
         name: 'Step',
-        mixins: [ Emitter ],
         props: {
             status: {
                 validator (value) {
@@ -48,9 +46,11 @@
                 stepNumber: '',
                 nextError: false,
                 total: 1,
-                currentStatus: '',
-                col: null// add by fen 用于多行展示
+                currentStatus: ''
             };
+        },
+        created () {
+            this.currentStatus = this.status;
         },
         computed: {
             wrapClasses () {
@@ -70,9 +70,9 @@
                     icon = this.icon;
                 } else {
                     if (this.currentStatus == 'finish') {
-                        icon = 'ios-checkmark';
+                        icon = 'ios-checkmark-empty';
                     } else if (this.currentStatus == 'error') {
-                        icon = 'ios-close';
+                        icon = 'ios-close-empty';
                     }
                 }
 
@@ -85,29 +85,8 @@
                 ];
             },
             styles () {
-                // add by fen 用于多行展示
-                let ret = {};
-                if(this.col === null){
-                    ret = {
-                        width: `${1/this.total*100}%`
-                    };
-                }else {
-                    ret = {
-                        width: `${1/this.col*100}%`
-                    };
-                }
-                return ret;
-            },
-            steps () {
-                let parent = this.$parent;
-                while (parent.$options.name !== 'Steps') {
-                    parent = parent.$parent;
-                }
-                return parent;
-            },
-            bgStyles () {
                 return {
-                    background: this.steps.background
+                    width: `${1/this.total*100}%`
                 };
             }
         },
@@ -118,15 +97,6 @@
                     this.$parent.setNextError();
                 }
             }
-        },
-        created () {
-            this.currentStatus = this.status;
-        },
-        mounted () {
-            this.dispatch('Steps', 'append');
-        },
-        beforeDestroy () {
-            this.dispatch('Steps', 'remove');
         }
     };
 </script>

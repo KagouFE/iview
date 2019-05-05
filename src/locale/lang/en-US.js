@@ -1,13 +1,9 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'en-US',
         select: {
             placeholder: 'Select',
             noMatch: 'No matching data',
-            loading: 'Loading',
-            add: 'Add'
+            loading: 'Loading'
         },
         table: {
             noDataText: 'No Data',
@@ -17,18 +13,13 @@ const lang = {
             clearFilter: 'All'
         },
         datepicker: {
-            nextMonth: 'Next Month',
-            prevMonth: 'Prev Month',
-            nextYear: 'Next Year',
-            prevYear: 'Prev Year',
             selectDate: 'Select date',
             selectTime: 'Select time',
             startTime: 'Start Time',
             endTime: 'End Time',
             clear: 'Clear',
             ok: 'OK',
-            datePanelLabel: '[mmmm] [yyyy]',
-            month: 'Month',
+            month: '',
             month1: 'January',
             month2: 'February',
             month3: 'March',
@@ -41,8 +32,7 @@ const lang = {
             month10: 'October',
             month11: 'November',
             month12: 'December',
-            year: 'Year',
-            weekStartDay: '0',
+            year: '',
             weeks: {
                 sun: 'Sun',
                 mon: 'Mon',
@@ -99,32 +89,8 @@ const lang = {
             star: 'Star',
             stars: 'Stars'
         },
-        time: {
-            before: ' ago',
-            after: ' after',
-            just: 'just now',
-            seconds: ' seconds',
-            minutes: ' minutes',
-            hours: ' hours',
-            days: ' days'
-        },
         tree: {
             emptyText: 'No Data'
-        },
-        tiledSelect:{
-            unlimited: 'Unlimited'
-        },
-        sideView: {
-            confirm: {
-                title: 'Unsaved Changes',
-                content: 'Are you sure you want to leave? There are unsaved changes. If you leave, your changes will be lost.',
-                buttonLeave: ' Discard Changes ',
-                buttonStay: ' Stay Here '
-            }
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

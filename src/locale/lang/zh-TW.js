@@ -1,15 +1,12 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'zh-TW',
         select: {
             placeholder: '請選擇',
-            noMatch: '無匹配資料',
+            noMatch: '無匹配數據',
             loading: '加載中'
         },
         table: {
-            noDataText: '暫無資料',
+            noDataText: '暫無數據',
             noFilteredDataText: '暫無篩選結果',
             confirmFilter: '篩選',
             resetFilter: '重置',
@@ -22,7 +19,6 @@ const lang = {
             endTime: '結束時間',
             clear: '清空',
             ok: '確定',
-            datePanelLabel: '[yyyy年] [m月]',
             month: '月',
             month1: '1 月',
             month2: '2 月',
@@ -37,7 +33,6 @@ const lang = {
             month11: '11 月',
             month12: '12 月',
             year: '年',
-            weekStartDay: '0',
             weeks: {
                 sun: '日',
                 mon: '一',
@@ -64,10 +59,10 @@ const lang = {
         },
         transfer: {
             titles: {
-                source: '來源列表',
-                target: '目標列表'
+                source: '源列表',
+                target: '目的列表'
             },
-            filterPlaceholder: '請輸入搜尋內容',
+            filterPlaceholder: '請輸入搜索內容',
             notFoundText: '列表爲空'
         },
         modal: {
@@ -79,8 +74,8 @@ const lang = {
             cancelText: '取消'
         },
         page: {
-            prev: '上一頁',
-            next: '下一頁',
+            prev: '上壹頁',
+            next: '下壹頁',
             total: '共',
             item: '條',
             items: '條',
@@ -95,11 +90,7 @@ const lang = {
             stars: '星'
         },
         tree: {
-            emptyText: '暫無資料'
+            emptyText: '暫無數據'
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

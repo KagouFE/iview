@@ -1,8 +1,8 @@
-const gulp = require('gulp');
-const cleanCSS = require('gulp-clean-css');
-const less = require('gulp-less');
-const rename = require('gulp-rename');
-const autoprefixer = require('gulp-autoprefixer');
+var gulp = require('gulp');
+var cleanCSS = require('gulp-clean-css');
+var less = require('gulp-less');
+var rename = require('gulp-rename');
+var autoprefixer = require('gulp-autoprefixer');
 
 // 编译less
 gulp.task('css', function () {
@@ -22,12 +22,4 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest('../dist/styles/fonts'));
 });
 
-// 拷贝 custom.less
-gulp.task('copyCustom', function () {
-    gulp.src('../src/styles/custom.less')
-      .pipe(gulp.dest('../dist/styles'));
-});
-
-gulp.task('default', ['css', 'fonts', 'copyCustom']);
-
-module.exports = gulp;
+gulp.task('default', ['css', 'fonts']);

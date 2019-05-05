@@ -1,20 +1,19 @@
 <template>
-    <div :class="uploadClasses">
+    <div :class="[prefixCls]">
         <div
             :class="classes"
+            @click="handleClick"
             @drop.prevent="onDrop"
-            @paste="handlePaste"
             @dragover.prevent="dragOver = true"
             @dragleave.prevent="dragOver = false">
             <input
-                    ref="input"
-                    type="file"
-                    :class="[prefixCls + '-input']"
-                    @change="handleChange"
-                    :multiple="multiple"
-                    :accept="accept">
-            <span @click="handleClick"><slot></slot></span>
-            <slot name="extra"></slot>
+                ref="input"
+                type="file"
+                :class="[prefixCls + '-input']"
+                @change="handleChange"
+                :multiple="multiple"
+                :accept="accept">
+            <slot></slot>
         </div>
         <slot name="tip"></slot>
         <upload-list
@@ -48,10 +47,6 @@
                 }
             },
             multiple: {
-                type: Boolean,
-                default: false
-            },
-            single: {
                 type: Boolean,
                 default: false
             },
@@ -137,14 +132,6 @@
                 default() {
                     return [];
                 }
-            },
-            paste: {
-                type: Boolean,
-                default: false
-            },
-            disabled: {
-                type: Boolean,
-                default: false
             }
         },
         data () {
@@ -158,18 +145,11 @@
         computed: {
             classes () {
                 return [
+                    `${prefixCls}`,
                     {
                         [`${prefixCls}-select`]: this.type === 'select',
                         [`${prefixCls}-drag`]: this.type === 'drag',
-                        [`${prefixCls}-dragOver`]: this.type === 'drag' && this.dragOver,
-                    }
-                ];
-            },
-            uploadClasses () {
-                return [
-                    `${prefixCls}`,
-                    {
-                        [`${prefixCls}--single`]: this.single,
+                        [`${prefixCls}-dragOver`]: this.type === 'drag' && this.dragOver
                     }
                 ];
             },
@@ -177,7 +157,6 @@
         },
         methods: {
             handleClick () {
-                if (this.disabled) return;
                 this.$refs.input.click();
             },
             handleChange (e) {
@@ -191,14 +170,7 @@
             },
             onDrop (e) {
                 this.dragOver = false;
-                if (this.disabled) return;
                 this.uploadFiles(e.dataTransfer.files);
-            },
-            handlePaste (e) {
-                if (this.disabled) return;
-                if (this.paste) {
-                    this.uploadFiles(e.clipboardData.files);
-                }
             },
             uploadFiles (files) {
                 let postFiles = Array.prototype.slice.call(files);
@@ -284,8 +256,6 @@
                     showProgress: true
                 };
 
-                if (this.single) this.fileList.length = 0; // add by fen 单文件上传的时候
-
                 this.fileList.push(_file);
             },
             getFile (file) {
@@ -309,13 +279,9 @@
                     _file.status = 'finished';
                     _file.response = res;
 
-                    this.onSuccess(res, _file, this.fileList);
                     this.dispatch('FormItem', 'on-form-change', _file);
+                    this.onSuccess(res, _file, this.fileList);
 
-                    if (this.single) { // add by fen 消失过慢导致视觉上不舒服
-                        _file.showProgress = false;
-                        return;
-                    }
                     setTimeout(() => {
                         _file.showProgress = false;
                     }, 1000);
@@ -335,7 +301,6 @@
                 const fileList = this.fileList;
                 fileList.splice(fileList.indexOf(file), 1);
                 this.onRemove(file, fileList);
-                this.dispatch('FormItem', 'on-form-change', file); // fixed by FEN 删除列表后的验证判断
             },
             handlePreview(file) {
                 if (file.status === 'finished') {
