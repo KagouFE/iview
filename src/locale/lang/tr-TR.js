@@ -1,8 +1,5 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'tr-TR',
         select: {
             placeholder: 'Seç',
             noMatch: 'Eşleşen veri yok',
@@ -22,7 +19,6 @@ const lang = {
             endTime: 'Bitişe',
             clear: 'Temizle',
             ok: 'Tamam',
-            datePanelLabel: '[mmmm] [yyyy]',
             month: '',
             month1: 'Ocak',
             month2: 'Şubat',
@@ -37,7 +33,6 @@ const lang = {
             month11: 'Kasım',
             month12: 'Aralık',
             year: '',
-            weekStartDay: '0',
             weeks: {
                 sun: 'Paz',
                 mon: 'Pzt',
@@ -99,7 +94,3 @@ const lang = {
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

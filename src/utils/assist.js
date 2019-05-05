@@ -138,7 +138,7 @@ function deepCopy(data) {
 export {deepCopy};
 
 // scrollTop animation
-export function scrollTop(el, from = 0, to, duration = 500, endCallback) {
+export function scrollTop(el, from = 0, to, duration = 500) {
     if (!window.requestAnimationFrame) {
         window.requestAnimationFrame = (
             window.webkitRequestAnimationFrame ||
@@ -153,10 +153,7 @@ export function scrollTop(el, from = 0, to, duration = 500, endCallback) {
     const step = Math.ceil(difference / duration * 50);
 
     function scroll(start, end, step) {
-        if (start === end) {
-            endCallback && endCallback();
-            return;
-        }
+        if (start === end) return;
 
         let d = (start + step > end) ? end : start + step;
         if (start > end) {
@@ -192,12 +189,20 @@ function findComponentUpward (context, componentName, componentNames) {
 export {findComponentUpward};
 
 // Find component downward
-export function findComponentDownward (context, componentName) {
+function findComponentDownward (context, componentName) {
     const childrens = context.$children;
     let children = null;
 
     if (childrens.length) {
-        for (const child of childrens) {
+        childrens.forEach(child => {
+            const name = child.$options.name;
+            if (name === componentName) {
+                children = child;
+            }
+        });
+
+        for (let i = 0; i < childrens.length; i++) {
+            const child = childrens[i];
             const name = child.$options.name;
             if (name === componentName) {
                 children = child;
@@ -210,37 +215,27 @@ export function findComponentDownward (context, componentName) {
     }
     return children;
 }
+export {findComponentDownward};
 
 // Find components downward
-export function findComponentsDownward (context, componentName) {
-    return context.$children.reduce((components, child) => {
-        if (child.$options.name === componentName) components.push(child);
-        const foundChilds = findComponentsDownward(child, componentName);
-        return components.concat(foundChilds);
-    }, []);
-}
+function findComponentsDownward (context, componentName, components = []) {
+    const childrens = context.$children;
 
-// Find components upward
-export function findComponentsUpward (context, componentName) {
-    let parents = [];
-    const parent = context.$parent;
-    if (parent) {
-        if (parent.$options.name === componentName) parents.push(parent);
-        return parents.concat(findComponentsUpward(parent, componentName));
-    } else {
-        return [];
+    if (childrens.length) {
+        childrens.forEach(child => {
+            const name = child.$options.name;
+            const childs = child.$children;
+
+            if (name === componentName) components.push(child);
+            if (childs.length) {
+                const findChilds = findComponentsDownward(child, componentName, components);
+                if (findChilds) components.concat(findChilds);
+            }
+        });
     }
+    return components;
 }
-
-// Find brothers components
-export function findBrothersComponents (context, componentName, exceptMe = true) {
-    let res = context.$parent.$children.filter(item => {
-        return item.$options.name === componentName;
-    });
-    let index = res.findIndex(item => item._uid === context._uid);
-    if (exceptMe) res.splice(index, 1);
-    return res;
-}
+export {findComponentsDownward};
 
 /* istanbul ignore next */
 const trim = function(string) {
@@ -303,28 +298,3 @@ export function removeClass(el, cls) {
         el.className = trim(curClass);
     }
 }
-
-export const dimensionMap = {
-    xs: '480px',
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px',
-    xxl: '1600px',
-};
-
-export function setMatchMedia () {
-    if (typeof window !== 'undefined') {
-        const matchMediaPolyfill = mediaQuery => {
-            return {
-                media: mediaQuery,
-                matches: false,
-                on() {},
-                off() {},
-            };
-        };
-        window.matchMedia = window.matchMedia || matchMediaPolyfill;
-    }
-}
-
-export const sharpMatcherRegx = /#([^#]+)$/;

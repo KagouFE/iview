@@ -1,13 +1,13 @@
 <template>
-    <ColorPicker v-model="color1" transfer />
+
 </template>
 <script>
     export default {
+        props: {},
         data () {
-            return {
-                color1: '#19be6b',
-                color2: ''
-            }
-        }
-    }
+            return {};
+        },
+        computed: {},
+        methods: {}
+    };
 </script>

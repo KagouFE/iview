@@ -3,7 +3,7 @@
         :class="classes"
         @mouseenter="handleMouseenter"
         @mouseleave="handleMouseleave"
-        v-click-outside="handleClose">
+        v-clickoutside="handleClose">
         <div
             :class="[prefixCls + '-rel']"
             ref="reference"
@@ -14,11 +14,10 @@
         </div>
         <transition name="fade">
             <div
-                :class="popperClasses"
+                :class="[prefixCls + '-popper']"
                 :style="styles"
                 ref="popper"
                 v-show="visible"
-                @click="handleTransferClick"
                 @mouseenter="handleMouseenter"
                 @mouseleave="handleMouseleave"
                 :data-transfer="transfer"
@@ -27,7 +26,7 @@
                     <div :class="[prefixCls + '-arrow']"></div>
                     <div :class="[prefixCls + '-inner']" v-if="confirm">
                         <div :class="[prefixCls + '-body']">
-                            <i class="ivu-icon ivu-icon-ios-help-circle"></i>
+                            <i class="ivu-icon ivu-icon-help-circled"></i>
                             <div :class="[prefixCls + '-body-message']"><slot name="title">{{ title }}</slot></div>
                         </div>
                         <div :class="[prefixCls + '-footer']">
@@ -36,9 +35,9 @@
                         </div>
                     </div>
                     <div :class="[prefixCls + '-inner']" v-if="!confirm">
-                        <div :class="[prefixCls + '-title']" :style="contentPaddingStyle" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
-                        <div :class="[prefixCls + '-body']" :style="contentPaddingStyle">
-                            <div :class="contentClasses"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
+                        <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
+                        <div :class="[prefixCls + '-body']">
+                            <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
                         </div>
                     </div>
                 </div>
@@ -49,10 +48,9 @@
 <script>
     import Popper from '../base/popper';
     import iButton from '../button/button.vue';
-    import {directive as clickOutside} from 'v-click-outside-x';
+    import clickoutside from '../../directives/clickoutside';
     import TransferDom from '../../directives/transfer-dom';
     import { oneOf } from '../../utils/assist';
-    import { transferIndex, transferIncrease } from '../../utils/transfer-queue';
     import Locale from '../../mixins/locale';
 
     const prefixCls = 'ivu-poptip';
@@ -60,7 +58,7 @@
     export default {
         name: 'Poptip',
         mixins: [ Popper, Locale ],
-        directives: { clickOutside, TransferDom },
+        directives: { clickoutside, TransferDom },
         components: { iButton },
         props: {
             trigger: {
@@ -97,29 +95,14 @@
             },
             transfer: {
                 type: Boolean,
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.transfer === '' ? false : this.$IVIEW.transfer;
-                }
-            },
-            popperClass: {
-                type: String
-            },
-            wordWrap: {
-                type: Boolean,
                 default: false
-            },
-            // default by css: 8px 16px
-            padding: {
-                type: String
             }
         },
         data () {
             return {
                 prefixCls: prefixCls,
                 showTitle: true,
-                isInput: false,
-                disableCloseUnderTransfer: false,  // transfer 模式下，点击 slot 也会触发关闭
-                tIndex: this.handleGetIndex()
+                isInput: false
             };
         },
         computed: {
@@ -131,24 +114,12 @@
                     }
                 ];
             },
-            popperClasses () {
-                return [
-                    `${prefixCls}-popper`,
-                    {
-                        [`${prefixCls}-confirm`]: this.transfer && this.confirm,
-                        [`${this.popperClass}`]: !!this.popperClass
-                    }
-                ];
-            },
             styles () {
                 let style = {};
 
                 if (this.width) {
                     style.width = `${this.width}px`;
                 }
-
-                if (this.transfer) style['z-index'] = 1060 + this.tIndex;
-
                 return style;
             },
             localeOkText () {
@@ -164,20 +135,7 @@
                 } else {
                     return this.cancelText;
                 }
-            },
-            contentClasses () {
-                return [
-                    `${prefixCls}-body-content`,
-                    {
-                        [`${prefixCls}-body-content-word-wrap`]: this.wordWrap
-                    }
-                ];
-            },
-            contentPaddingStyle () {
-                const styles = {};
-                if (this.padding !== '') styles['padding'] = this.padding;
-                return styles;
-            },
+            }
         },
         methods: {
             handleClick () {
@@ -190,14 +148,7 @@
                 }
                 this.visible = !this.visible;
             },
-            handleTransferClick () {
-                if (this.transfer) this.disableCloseUnderTransfer = true;
-            },
             handleClose () {
-                if (this.disableCloseUnderTransfer) {
-                    this.disableCloseUnderTransfer = false;
-                    return false;
-                }
                 if (this.confirm) {
                     this.visible = false;
                     return true;
@@ -259,13 +210,6 @@
                 }
 
                 return $children;
-            },
-            handleGetIndex () {
-                transferIncrease();
-                return transferIndex;
-            },
-            handleIndexIncrease () {
-                this.tIndex = this.handleGetIndex();
             }
         },
         mounted () {

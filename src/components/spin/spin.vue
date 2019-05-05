@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div :class="classes" v-if="fullscreenVisible">
+        <div :class="classes">
             <div :class="mainClasses">
                 <span :class="dotClasses"></span>
                 <div :class="textClasses"><slot></slot></div>
@@ -10,36 +10,25 @@
 </template>
 <script>
     import { oneOf } from '../../utils/assist';
-    import ScrollbarMixins from '../modal/mixins-scrollbar';
 
     const prefixCls = 'ivu-spin';
 
     export default {
         name: 'Spin',
-        mixins: [ ScrollbarMixins ],
         props: {
             size: {
                 validator (value) {
-                    return oneOf(value, ['small', 'large', 'default']);
-                },
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
+                    return oneOf(value, ['small', 'large']);
                 }
             },
             fix: {
-                type: Boolean,
-                default: false
-            },
-            fullscreen: {
                 type: Boolean,
                 default: false
             }
         },
         data () {
             return {
-                showText: false,
-                // used for $Spin
-                visible: false
+                showText: false
             };
         },
         computed: {
@@ -50,7 +39,6 @@
                         [`${prefixCls}-${this.size}`]: !!this.size,
                         [`${prefixCls}-fix`]: this.fix,
                         [`${prefixCls}-show-text`]: this.showText,
-                        [`${prefixCls}-fullscreen`]: this.fullscreen
                     }
                 ];
             },
@@ -62,22 +50,6 @@
             },
             textClasses () {
                 return `${prefixCls}-text`;
-            },
-            fullscreenVisible () {
-                if (this.fullscreen) {
-                    return this.visible;
-                } else {
-                    return true;
-                }
-            }
-        },
-        watch: {
-            visible (val) {
-                if (val) {
-                    this.addScrollEffect();
-                } else {
-                    this.removeScrollEffect();
-                }
             }
         },
         mounted () {

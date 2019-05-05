@@ -1,12 +1,9 @@
-import setLang from '../lang';
-
-const lang = {
+export default {
     i: {
-        locale: 'sv-SE',
         select: {
             placeholder: 'Välj',
             noMatch: 'Ingen träff',
-            loading: 'Laddar'
+            loading: 'Ladar'
         },
         table: {
             noDataText: 'Ingen data',
@@ -22,7 +19,6 @@ const lang = {
             endTime: 'Slut tid',
             clear: 'Rensa',
             ok: 'Ok',
-            datePanelLabel: '[mmmm] [yyyy]',
             month: 'Månad',
             month1: 'Januari',
             month2: 'Februari',
@@ -37,7 +33,6 @@ const lang = {
             month11: 'November',
             month12: 'December',
             year: 'År',
-            weekStartDay: '1',
             weeks: {
                 sun: 'Sön',
                 mon: 'Mån',
@@ -99,7 +94,3 @@ const lang = {
         }
     }
 };
-
-setLang(lang);
-
-export default lang;

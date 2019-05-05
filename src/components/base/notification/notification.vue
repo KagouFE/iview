@@ -1,5 +1,5 @@
 <template>
-    <div :class="classes" :style="wrapStyles">
+    <div :class="classes" :style="styles">
         <Notice
             v-for="notice in notices"
             :key="notice.name"
@@ -8,12 +8,8 @@
             :type="notice.type"
             :content="notice.content"
             :duration="notice.duration"
-            :render="notice.render"
-            :has-title="notice.hasTitle"
-            :withIcon="notice.withIcon"
             :closable="notice.closable"
             :name="notice.name"
-            :contentClassName="notice.contentClassName"
             :transition-name="notice.transitionName"
             :on-close="notice.onClose">
         </Notice>
@@ -21,8 +17,6 @@
 </template>
 <script>
     import Notice from './notice.vue';
-
-    import { transferIndex, transferIncrease } from '../../../utils/transfer-queue';
 
     const prefixCls = 'ivu-notification';
     let seed = 0;
@@ -57,8 +51,7 @@
         },
         data () {
             return {
-                notices: [],
-                tIndex: this.handleGetIndex()
+                notices: []
             };
         },
         computed: {
@@ -69,12 +62,6 @@
                         [`${this.className}`]: !!this.className
                     }
                 ];
-            },
-            wrapStyles () {
-                let styles = Object.assign({}, this.styles);
-                styles['z-index'] = 1010 + this.tIndex;
-
-                return styles;
             }
         },
         methods: {
@@ -92,7 +79,6 @@
                 }, notice);
 
                 this.notices.push(_notice);
-                this.tIndex = this.handleGetIndex();
             },
             close (name) {
                 const notices = this.notices;
@@ -105,11 +91,7 @@
             },
             closeAll () {
                 this.notices = [];
-            },
-            handleGetIndex () {
-                transferIncrease();
-                return transferIndex;
-            },
+            }
         }
     };
 </script>

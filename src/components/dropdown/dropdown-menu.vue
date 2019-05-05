@@ -2,7 +2,5 @@
     <ul class="ivu-dropdown-menu"><slot></slot></ul>
 </template>
 <script>
-    export default {
-        name: 'DropdownMenu'
-    };
+    export default {};
 </script>

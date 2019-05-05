@@ -1,10 +1,8 @@
 <template>
-    <div :class="classes" v-click-outside="handleClose">
+    <div :class="classes" v-clickoutside="handleClose">
         <div :class="[prefixCls + '-rel']" @click="toggleOpen" ref="reference">
-            <input type="hidden" :name="name" :value="currentValue">
             <slot>
                 <i-input
-                    :element-id="elementId"
                     ref="input"
                     :readonly="!filterable"
                     :disabled="disabled"
@@ -16,17 +14,16 @@
                     :class="[prefixCls + '-label']"
                     v-show="filterable && query === ''"
                     @click="handleFocus">{{ displayRender }}</div>
-                <Icon type="ios-close-circle" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
-                <Icon type="ios-arrow-down" :class="[prefixCls + '-arrow']"></Icon>
+                <Icon type="ios-close" :class="[prefixCls + '-arrow']" v-show="showCloseIcon" @click.native.stop="clearSelect"></Icon>
+                <Icon type="arrow-down-b" :class="[prefixCls + '-arrow']"></Icon>
             </slot>
         </div>
-        <transition name="transition-drop">
+        <transition name="slide-up">
             <Drop
                 v-show="visible"
                 :class="{ [prefixCls + '-transfer']: transfer }"
                 ref="drop"
                 :data-transfer="transfer"
-                :transfer="transfer"
                 v-transfer-dom>
                 <div>
                     <Caspanel
@@ -58,7 +55,7 @@
     import Drop from '../select/dropdown.vue';
     import Icon from '../icon/icon.vue';
     import Caspanel from './caspanel.vue';
-    import {directive as clickOutside} from 'v-click-outside-x';
+    import clickoutside from '../../directives/clickoutside';
     import TransferDom from '../../directives/transfer-dom';
     import { oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
@@ -71,7 +68,7 @@
         name: 'Cascader',
         mixins: [ Emitter, Locale ],
         components: { iInput, Drop, Icon, Caspanel },
-        directives: { clickOutside, TransferDom },
+        directives: { clickoutside, TransferDom },
         props: {
             data: {
                 type: Array,
@@ -98,10 +95,7 @@
             },
             size: {
                 validator (value) {
-                    return oneOf(value, ['small', 'large', 'default']);
-                },
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.size === '' ? 'default' : this.$IVIEW.size;
+                    return oneOf(value, ['small', 'large']);
                 }
             },
             trigger: {
@@ -132,15 +126,7 @@
             },
             transfer: {
                 type: Boolean,
-                default () {
-                    return !this.$IVIEW || this.$IVIEW.transfer === '' ? false : this.$IVIEW.transfer;
-                }
-            },
-            name: {
-                type: String
-            },
-            elementId: {
-                type: String
+                default: false
             }
         },
         data () {
@@ -225,9 +211,7 @@
                     }
                 }
                 getSelections(this.data);
-                selections = selections.filter(item => {
-                    return item.label ? item.label.indexOf(this.query) > -1 : false;
-                }).map(item => {
+                selections = selections.filter(item => item.label.indexOf(this.query) > -1).map(item => {
                     item.display = item.display.replace(new RegExp(this.query, 'g'), `<span>${this.query}</span>`);
                     return item;
                 });
@@ -264,9 +248,8 @@
             updateResult (result) {
                 this.tmpSelected = result;
             },
-            updateSelected (init = false, changeOnSelectDataChange = false) {
-                // #2793 changeOnSelectDataChange used for changeOnSelect when data changed and set value
-                if (!this.changeOnSelect || init || changeOnSelectDataChange) {
+            updateSelected (init = false) {
+                if (!this.changeOnSelect || init) {
                     this.broadcast('Caspanel', 'on-find-selected', {
                         value: this.currentValue
                     });
@@ -294,11 +277,8 @@
                 this.$refs.input.currentValue = '';
                 const oldVal = JSON.stringify(this.currentValue);
                 this.currentValue = item.value.split(',');
-                // use setTimeout for #4786, can not use nextTick, because @on-find-selected use nextTick
-                setTimeout(() => {
-                    this.emitValue(this.currentValue, oldVal);
-                    this.handleClose();
-                }, 0);
+                this.emitValue(this.currentValue, oldVal);
+                this.handleClose();
             },
             handleFocus () {
                 this.$refs.input.focus();
@@ -366,7 +346,6 @@
                     if (this.transfer) {
                         this.$refs.drop.update();
                     }
-                    this.broadcast('Drop', 'on-update-popper');
                 } else {
                     if (this.filterable) {
                         this.query = '';
@@ -375,7 +354,6 @@
                     if (this.transfer) {
                         this.$refs.drop.destroy();
                     }
-                    this.broadcast('Drop', 'on-destroy-popper');
                 }
                 this.$emit('on-visible-change', val);
             },
@@ -398,7 +376,7 @@
                     if (validDataStr !== this.validDataStr) {
                         this.validDataStr = validDataStr;
                         if (!this.isLoadedChildren) {
-                            this.$nextTick(() => this.updateSelected(false, this.changeOnSelect));
+                            this.$nextTick(() => this.updateSelected());
                         }
                         this.isLoadedChildren = false;
                     }

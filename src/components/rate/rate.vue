@@ -1,25 +1,11 @@
 <template>
     <div :class="classes" @mouseleave="handleMouseleave">
-        <input type="hidden" :name="name" :value="currentValue">
         <div
             v-for="item in count"
             :class="starCls(item)"
             @mousemove="handleMousemove(item, $event)"
-            :key="item"
             @click="handleClick(item)">
-            <template v-if="!showCharacter">
-                <span :class="[prefixCls + '-star-content']" type="half"></span>
-            </template>
-            <template v-else>
-                <span :class="[prefixCls + '-star-first']" type="half">
-                    <template v-if="character !== ''">{{ character }}</template>
-                    <i v-else :class="iconClasses" type="half"></i>
-                </span>
-                <span :class="[prefixCls + '-star-second']">
-                    <template v-if="character !== ''">{{ character }}</template>
-                    <i v-else :class="iconClasses"></i>
-                </span>
-            </template>
+            <span :class="[prefixCls + '-star-content']" type="half"></span>
         </div>
         <div :class="[prefixCls + '-text']" v-if="showText" v-show="currentValue > 0">
             <slot><span>{{ currentValue }}</span> <span v-if="currentValue <= 1">{{ t('i.rate.star') }}</span><span v-else>{{ t('i.rate.stars') }}</span></slot>
@@ -30,14 +16,10 @@
     import Locale from '../../mixins/locale';
     import Emitter from '../../mixins/emitter';
 
-    import Icon from '../icon/icon.vue';
-
     const prefixCls = 'ivu-rate';
 
     export default {
-        name: 'Rate',
         mixins: [ Locale, Emitter ],
-        components: { Icon },
         props: {
             count: {
                 type: Number,
@@ -58,25 +40,6 @@
             showText: {
                 type: Boolean,
                 default: false
-            },
-            name: {
-                type: String
-            },
-            clearable: {
-                type: Boolean,
-                default: false
-            },
-            character: {
-                type: String,
-                default: ''
-            },
-            icon: {
-                type: String,
-                default: ''
-            },
-            customIcon: {
-                type: String,
-                default: ''
             }
         },
         data () {
@@ -84,7 +47,7 @@
                 prefixCls: prefixCls,
                 hoverIndex: -1,
                 isHover: false,
-                isHalf: this.allowHalf && this.value.toString().indexOf('.') >= 0,
+                isHalf: false,
                 currentValue: this.value
             };
         },
@@ -96,18 +59,6 @@
                         [`${prefixCls}-disabled`]: this.disabled
                     }
                 ];
-            },
-            iconClasses () {
-                return [
-                    'ivu-icon',
-                    {
-                        [`ivu-icon-${this.icon}`]: this.icon !== '',
-                        [`${this.customIcon}`]: this.customIcon !== '',
-                    }
-                ];
-            },
-            showCharacter () {
-                return this.character !== '' || this.icon !== '' || this.customIcon !== '';
             }
         },
         watch: {
@@ -135,9 +86,8 @@
                 }
 
                 return [
-                    {   
-                        [`${prefixCls}-star`]: !this.showCharacter,
-                        [`${prefixCls}-star-chart`]: this.showCharacter,
+                    `${prefixCls}-star`,
+                    {
                         [`${prefixCls}-star-full`]: (!isLast && full) || (isLast && !this.isHalf),
                         [`${prefixCls}-star-half`]: isLast && this.isHalf,
                         [`${prefixCls}-star-zero`]: !full
@@ -164,17 +114,12 @@
                 this.hoverIndex = -1;
             },
             setHalf (val) {
-                this.isHalf = this.allowHalf && val.toString().indexOf('.') >= 0;
+                this.isHalf = val.toString().indexOf('.') >= 0;
             },
             handleClick (value) {
                 if (this.disabled) return;
-                //value++;
+//                 value++;
                 if (this.isHalf) value -= 0.5;
-
-                if(this.clearable && Math.abs(value - this.currentValue) < 0.01) {
-                    value = 0;
-                }
-
                 this.currentValue = value;
                 this.$emit('input', value);
                 this.$emit('on-change', value);
