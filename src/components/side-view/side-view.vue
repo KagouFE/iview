@@ -36,7 +36,8 @@
             <div :class="[prefixCls + '-body']">
                 <template v-if="showContent">
                     <slot v-if="!src"></slot>
-                    <iframe :class="[prefixCls + '-iframe']" v-if="src" :src="src" frameborder="0" allowtransparency="true"></iframe>
+                    <iframe :class="[prefixCls + '-iframe']" v-if="src" :src="src" frameborder="0"
+                            allowtransparency="true"></iframe>
                 </template>
             </div>
             <div :class="[prefixCls + '-footer']" v-if="$slots.footer">
@@ -44,10 +45,21 @@
             </div>
             <iSpin size="large" fix v-if="showSpin"></iSpin>
         </div>
+        <exit-modal
+            v-model="showExitModal"
+            @cancel="cancelModal"
+            @submit="submitModal"
+            :title="this.t('i.sideView.confirm.title')"
+            :content="this.t('i.sideView.confirm.content')"
+            :okText="this.t('i.sideView.confirm.buttonLeave')"
+            :cancelText="this.t('i.sideView.confirm.buttonStay')"
+        >
+        </exit-modal>
     </div>
 </template>
 <script>
     import iButton from '../button/button.vue';
+    import exitModal from './exit-modal.vue';
     import iDropDown from '../dropdown';
     import iSpin from '../spin';
     import TransferDom from '../../directives/transfer-dom';
@@ -63,7 +75,7 @@
     export default {
         name: 'SideView',
         mixins: [Locale, Emitter],
-        components: {iButton, iDropDown, iDropDownMenu, iDropDownItem, iSpin},
+        components: {iButton, iDropDown, iDropDownMenu, iDropDownItem, iSpin, exitModal},
         directives: {TransferDom},
         props: {
             value: {
@@ -163,7 +175,8 @@
                 hidden: true,
                 parentSideView: null,
                 showContent: false,
-                showSpin: false
+                showSpin: false,
+                showExitModal: false
             };
         },
         computed: {
@@ -209,6 +222,26 @@
             }
         },
         methods: {
+            cancelModal () {
+                this.showExitModal = false;
+            },
+            submitModal () {
+                this.closeNext();
+            },
+            closeNext () {
+                this.visible = false;
+                this.setVisible();
+                clearTimeout(this.timer);
+                this.showContent = false;
+                this.showSpin = false;
+                this.buttonLoading = false;
+                this.showExitModal = false;
+                this.$emit('input', false);
+                this.$emit('on-close');
+                setTimeout(() => {
+                    this.afterClose();
+                }, 400);
+            },
             close () {
                 const next = () => {
                     this.visible = false;
@@ -217,6 +250,7 @@
                     this.showContent = false;
                     this.showSpin = false;
                     this.buttonLoading = false;
+                    this.showExitModal = false;
                     this.$emit('input', false);
                     this.$emit('on-close');
                     setTimeout(() => {
@@ -228,18 +262,19 @@
                  * 第一个参数用于继续关闭操作
                  * 第二财参数用于弹出是否关闭的确认窗口
                  */
-                this.beforeClose(next, () => this.closeConfirm(next));
+                this.beforeClose(next, () => this.closeConfirm());
             },
-            closeConfirm (ok) {
-                this.$Modal.confirm({
-                    title: this.t('i.sideView.confirm.title'),
-                    content: `<p>${this.t('i.sideView.confirm.content')}</p>`,
-                    okText: this.t('i.sideView.confirm.buttonLeave'),
-                    cancelText: this.t('i.sideView.confirm.buttonStay'),
-                    onOk: function () {
-                        ok();
-                    }
-                });
+            closeConfirm () {
+                this.showExitModal = true;
+//                this.$Modal.confirm({
+//                    title: this.t('i.sideView.confirm.title'),
+//                    content: `<p>${this.t('i.sideView.confirm.content')}</p>`,
+//                    okText: this.t('i.sideView.confirm.buttonLeave'),
+//                    cancelText: this.t('i.sideView.confirm.buttonStay'),
+//                    onOk: function () {
+//                        ok();
+//                    }
+//                });
             },
             show () {
                 const next = () => {
@@ -349,7 +384,7 @@
                 if (val) {
                     this.show();
                 } else {
-                    this.close();
+                    this.closeNext();
                 }
 
                 this.broadcast('Table', 'on-visible-change', val);

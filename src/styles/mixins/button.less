@@ -347,6 +347,35 @@
     //.active-btn-color(@primary-color);
 }
 
+// Link text add by LAN
+.btn-link-text() {
+    .button-variant(@text-color, @btn-ghost-bg, transparent);
+
+    // for disabled
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &,
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            .button-color(@btn-disable-color; @btn-ghost-bg; transparent);
+        }
+    }
+
+    &:hover
+        //&:focus
+    {
+        .button-color(@link-hover-color; @btn-ghost-bg; transparent);
+    }
+    &:active,
+    &.active {
+        .button-color(@link-active-color; @btn-ghost-bg; transparent);
+    }
+    //.active-btn-color(@primary-color);
+}
+
 .btn-secondary() {
     .button-variant(@btn-secondary-color, @btn-secondary-bg, @btn-secondary-border);
 

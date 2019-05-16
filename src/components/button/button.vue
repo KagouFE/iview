@@ -20,7 +20,7 @@
         props: {
             type: {
                 validator(value) {
-                    return oneOf(value, [ 'primary', 'ghost', 'dashed', 'text', 'info', 'success', 'warning', 'error', 'default', 'link', 'secondary' ]);
+                    return oneOf(value, [ 'primary', 'ghost', 'dashed', 'text', 'info', 'success', 'warning', 'error', 'default', 'link', 'secondary', 'link-text']);
                 },
                 default: 'default'
             },
