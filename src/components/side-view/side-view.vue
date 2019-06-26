@@ -45,21 +45,21 @@
             </div>
             <iSpin size="large" fix v-if="showSpin"></iSpin>
         </div>
-        <exit-modal
+        <k-modal
             v-model="showExitModal"
             @cancel="cancelModal"
-            @submit="submitModal"
+            @ok="submitModal"
             :title="this.t('i.sideView.confirm.title')"
             :content="this.t('i.sideView.confirm.content')"
             :okText="this.t('i.sideView.confirm.buttonLeave')"
             :cancelText="this.t('i.sideView.confirm.buttonStay')"
         >
-        </exit-modal>
+        </k-modal>
     </div>
 </template>
 <script>
     import iButton from '../button/button.vue';
-    import exitModal from './exit-modal.vue';
+    import KModal from '../k-modal/k-modal.vue';
     import iDropDown from '../dropdown';
     import iSpin from '../spin';
     import TransferDom from '../../directives/transfer-dom';
@@ -75,7 +75,7 @@
     export default {
         name: 'SideView',
         mixins: [Locale, Emitter],
-        components: {iButton, iDropDown, iDropDownMenu, iDropDownItem, iSpin, exitModal},
+        components: {iButton, iDropDown, iDropDownMenu, iDropDownItem, iSpin, KModal},
         directives: {TransferDom},
         props: {
             value: {

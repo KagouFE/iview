@@ -5,11 +5,17 @@
             <div class="panel__title" v-if="title">{{title}}</div>
             <div class="panel__fn" v-if="$slots.fn">
                 <slot name="fn"></slot>
+                <Button v-if="showToggle" type="text" size="small" @click="handleToggle">
+                    <Icon :type="iosArrowType"/>
+                </Button>
             </div>
+        </div>
+        <div class="panel__body">
+            <slot name="preBody"></slot>
         </div>
         <transition name="transition-drop"
         >
-            <div class="panel__body" v-show="!hideBody">
+            <div class="panel__body" v-show="showBody">
                 <slot></slot>
             </div>
         </transition>
@@ -27,7 +33,8 @@
         name: 'panel',
         data () {
             return {
-                visible: true
+                visible: true,
+                showBody: true,
             };
         },
         props: {
@@ -98,9 +105,16 @@
             actived: {
                 type: Boolean,
                 default: false
+            },
+            showToggle: {
+                type: Boolean,
+                default: false
             }
         },
         computed: {
+            iosArrowType () {
+                return this.showBody ? 'ios-arrow-up' : 'ios-arrow-down';
+            },
             panelIndexClass () {
                 return this.actived ? `${prefixCls}__index__actived` : `${prefixCls}__index`;
             },
@@ -130,8 +144,20 @@
             handleClosePanel (e) {
                 if (this.closeBySelf) this.visible = false;
                 this.$emit('on-close', e);
+            },
+            handleToggle () {
+                this.showBody = !this.showBody;
+            },
+            initShowBody (val) {
+                this.showBody = !val;
             }
-        }
+        },
+        watch: {
+            'hideBody': {
+                handler: 'initShowBody',
+                immediate: true
+            }
+        },
     };
 
 </script>

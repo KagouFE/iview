@@ -1,8 +1,9 @@
 <template>
     <Modal
+        footer-hide
         v-model="newValue"
         :closable="false"
-        width="416">
+        :width="width">
         <!--<div slot="header">-->
         <!--<Icon type="ios-information-circle"/>-->
         <!--{{title}}-->
@@ -11,22 +12,26 @@
             <Icon type="ios-help-circle" size="28" color="#f90"/>
             <span class="ivu-modal-confirm-head-title">{{title}}</span></div>
         <div class="ivu-modal-confirm-body mt8"><p>{{content}}</p></div>
-        <div slot="footer" class="ivu-modal-confirm-footer mt4">
+        <k-split transparent/>
+        <div align="right">
             <Button @click="cancel">{{cancelText}}</Button>
-            <Button @click="submit">{{okText}}</Button>
+            <Button @click="ok">{{okText}}</Button>
         </div>
     </Modal>
 </template>
 
 <script>
+    import KSplit from '../k-split/split.vue';
+
     export default {
-        name: 'exitModal',
+        components: {KSplit},
+        name: 'KModal',
         data () {
             return {
                 newValue: false,
                 isClose: false,
                 isOk: false,
-            }
+            };
         },
         props: {
             value: {
@@ -47,16 +52,20 @@
             cancelText: {
                 type: String,
                 default: 'cancel'
+            },
+            width: {
+                type: Number,
+                default: 416
             }
         },
         methods: {
             cancel () {
                 this.$emit('cancel', this.newValue);
             },
-            submit () {
-                this.$emit('submit', this.newValue);
+            ok () {
+                this.$emit('ok', this.newValue);
             },
-            setValue (value) {
+            setValue () {
                 this.newValue = this.value;
             },
             emit (val) {

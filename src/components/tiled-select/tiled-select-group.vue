@@ -116,6 +116,8 @@
             },
             update () {
                 this.$nextTick(() => {
+                    // 手动改变值的时候需要处理
+                    this.currentValue = this.value
                     this.setChildren();
                     this.setChildrenSelect();
                     this.setUnlimitedState(); // 只在初始化的时候去计算是否 All 选项需要选中
@@ -133,7 +135,6 @@
                 });
             },
             setCurrentValue (valueName) {
-
                 const setMutiValue = () => {
                     if(valueName === ''){
                         this.currentValue = [];
@@ -170,7 +171,6 @@
         },
         watch: {
             value () {
-                console.log('change');
                 this.update();
             }
         }

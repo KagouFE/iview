@@ -29,7 +29,7 @@
             status: {
                 validator (value) {
                     return oneOf(value, ['wait', 'process', 'finish', 'error']);
-                }
+                },
             },
             title: {
                 type: String,

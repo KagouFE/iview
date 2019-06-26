@@ -60,6 +60,7 @@ import {Select, Option, OptionGroup} from './components/select';
 import locale from './locale';
 // add by FEN
 import KSplit from './components/k-split';
+import KModal from './components/k-modal';
 import Panel from './components/panel';
 import List from './components/list';
 import Editor from './components/editor';
@@ -153,6 +154,7 @@ const components = {
     Upload,
     // add by FEN
     KSplit,
+    KModal,
     Panel,
     List,
     ListItem: List.Item,
@@ -164,7 +166,7 @@ const components = {
     TableTr,
     TiledSelect,
     TiledSelectGroup: TiledSelect.group,
-    SideView
+    SideView,
 };
 
 const iview = {
