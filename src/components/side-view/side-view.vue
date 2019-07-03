@@ -51,8 +51,8 @@
             @ok="submitModal"
             :title="this.t('i.sideView.confirm.title')"
             :content="this.t('i.sideView.confirm.content')"
-            :okText="this.t('i.sideView.confirm.buttonLeave')"
-            :cancelText="this.t('i.sideView.confirm.buttonStay')"
+            :ok-text="this.t('i.sideView.confirm.buttonLeave')"
+            :cancel-text="this.t('i.sideView.confirm.buttonStay')"
         >
         </k-modal>
     </div>

@@ -151,6 +151,26 @@
         left: 23px;
     }
 
+    &-huge{
+        width: 120px;
+        &:active:after {
+            width: 26px;
+        }
+    }
+    &-huge:active:after {
+        width: 30px;
+    }
+    &-huge&-checked:after {
+        left: 99px;
+    }
+    &-huge&-checked:before {
+        left: 37px;
+    }
+
+    &-huge:active&-checked:after {
+        left: 23px;
+    }
+
     &-checked {
         border-color: @primary-color;
         background-color: @primary-color;

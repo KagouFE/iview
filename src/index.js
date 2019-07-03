@@ -69,6 +69,7 @@ import MergeTable from './components/merge-table';
 import {TableTd, TableTr} from './components/merge-table';
 import TiledSelect from './components/tiled-select';
 import SideView from './components/side-view';
+import KSwitch from './components/k-switch';
 
 
 // add by shilei
@@ -167,6 +168,7 @@ const components = {
     TiledSelect,
     TiledSelectGroup: TiledSelect.group,
     SideView,
+    KSwitch,
 };
 
 const iview = {

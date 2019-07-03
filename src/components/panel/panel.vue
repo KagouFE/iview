@@ -3,14 +3,14 @@
         <div class="panel__header clearfix" v-if="title || $slots.header">
             <slot name="header"></slot>
             <div class="panel__title" v-if="title">{{title}}</div>
-            <div class="panel__fn" v-if="$slots.fn">
-                <slot name="fn"></slot>
+            <div class="panel__fn" v-if="$slots.fn || showToggle">
+                <slot name="fn" v-if="$slots.fn">></slot>
                 <Button v-if="showToggle" type="text" size="small" @click="handleToggle">
                     <Icon :type="iosArrowType"/>
                 </Button>
             </div>
         </div>
-        <div class="panel__body">
+        <div class="panel__body" v-if="showToggle">
             <slot name="preBody"></slot>
         </div>
         <transition name="transition-drop"

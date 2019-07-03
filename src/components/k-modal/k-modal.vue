@@ -9,7 +9,7 @@
         <!--{{title}}-->
         <!--</div>-->
         <div>
-            <Icon type="ios-help-circle" size="28" color="#f90"/>
+            <Icon :type="'md'+'-'+icon" size="28" color="#f90"/>
             <span class="ivu-modal-confirm-head-title">{{title}}</span></div>
         <div class="ivu-modal-confirm-body mt8"><p>{{content}}</p></div>
         <k-split transparent/>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+    import {oneOf} from '../../utils/assist';
     import KSplit from '../k-split/split.vue';
 
     export default {
@@ -56,7 +57,16 @@
             width: {
                 type: Number,
                 default: 416
+            },
+            icon: {
+                type: String,
+                default: 'help-circle',
+                validator (value) {
+                    return oneOf(value, ['alert', 'help-circle']);
+                },
             }
+        },
+        computed: {
         },
         methods: {
             cancel () {
