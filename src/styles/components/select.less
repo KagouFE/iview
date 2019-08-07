@@ -37,8 +37,8 @@
         .inner-arrow();
     }
 
-    &-visible{
-        .@{select-prefix-cls}-selection{
+    &-visible {
+        .@{select-prefix-cls}-selection {
             .active();
         }
 
@@ -67,15 +67,21 @@
         }
     }
 
-    &-single &-selection{
+    &-disabled-highlight {
+        .@{select-prefix-cls}-selection {
+            .disabled-highlight();
+        }
+    }
+
+    &-single &-selection {
         height: @input-height-base;
         position: relative;
 
-        .@{select-prefix-cls}-placeholder{
+        .@{select-prefix-cls}-placeholder {
             color: @input-placeholder-color;
         }
 
-        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value{
+        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value {
             display: block;
             height: @input-height-base - 2px;
             line-height: @input-height-base - 2px;
@@ -88,11 +94,11 @@
         }
     }
 
-    &-multiple &-selection{
+    &-multiple &-selection {
         padding: 0 24px 0 4px;
         //min-height: @input-height-base;
 
-        .@{select-prefix-cls}-placeholder{
+        .@{select-prefix-cls}-placeholder {
             display: block;
             height: @input-height-base - 2px;
             line-height: @input-height-base - 2px;
@@ -106,41 +112,41 @@
         }
     }
 
-    &-large&-single &-selection{
+    &-large&-single &-selection {
         height: @input-height-large;
 
-        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value{
+        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value {
             height: @input-height-large - 2px;
             line-height: @input-height-large - 2px;
             font-size: @font-size-base;
         }
     }
 
-    &-large&-multiple &-selection{
+    &-large&-multiple &-selection {
         min-height: @input-height-large;
 
-        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value{
+        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value {
             min-height: @input-height-large - 2px;
             line-height: @input-height-large - 2px;
             font-size: @font-size-base;
         }
     }
 
-    &-small&-single &-selection{
+    &-small&-single &-selection {
         height: @input-height-small;
         border-radius: @btn-border-radius-small;
 
-        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value{
+        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value {
             height: @input-height-small - 2px;
             line-height: @input-height-small - 2px;
         }
     }
 
-    &-small&-multiple &-selection{
+    &-small&-multiple &-selection {
         min-height: @input-height-small;
         border-radius: @btn-border-radius-small;
 
-        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value{
+        .@{select-prefix-cls}-placeholder, .@{select-prefix-cls}-selected-value {
             height: auto;
             min-height: @input-height-small - 2px;
             line-height: @input-height-small - 2px;
@@ -148,18 +154,18 @@
     }
 
     // by FEN
-    &-multiple&-small &-selection{
+    &-multiple&-small &-selection {
         min-height: @input-height-small;
-        padding-left:2px;
+        padding-left: 2px;
 
-        .@{select-prefix-cls}-placeholder{
+        .@{select-prefix-cls}-placeholder {
             height: @input-height-small - 2;
             line-height: @input-height-small - 2;
         }
     }
 
     // input
-    &-input{
+    &-input {
         display: inline-block;
         height: @input-height-base;
         line-height: @input-height-base;
@@ -174,44 +180,51 @@
         cursor: pointer;
         .placeholder();
 
-        &[disabled]{
+        &[disabled] {
             cursor: @cursor-disabled;
             color: #ccc;
-            -webkit-text-fill-color: #ccc;  // #5249
+            -webkit-text-fill-color: #ccc; // #5249
         }
+        // add by wan - - - - -
+        &-disabled-highlight {
+            &[disabled] {
+                .disabled-highlight();
+            }
+        }
+        // add by wan - - - - -
     }
 
-    &-single &-input{
+    &-single &-input {
         width: 100%;
     }
 
-    &-large &-input{
+    &-large &-input {
         font-size: @font-size-base;
         height: @input-height-large;
     }
 
-    &-small &-input{
+    &-small &-input {
         height: @input-height-small - 2px;
         line-height: @input-height-small - 2px;
     }
 
-    &-multiple &-input{
+    &-multiple &-input {
         height: @input-height-base - 3px;
         line-height: @input-height-base;
         padding: 0 0 0 4px;
     }
 
     // by FEN
-    &-multiple&-small &-input{
+    &-multiple&-small &-input {
         height: @input-height-small - 2;
         line-height: @input-height-small;
         padding: 0 0 0 4px;
     }
 
     // by FEN start
-    &-not-found, &-loading{
+    &-not-found, &-loading {
         text-align: center;
-        padding:5px 0;
+        padding: 5px 0;
         color: @btn-disable-color;
         //li:not([class^=ivu-]){
         //    margin-bottom: 0;
@@ -223,32 +236,32 @@
     //    color: @btn-disable-color;
     //}
 
-    &__extra{
+    &__extra {
         border-top: 1px solid @border-color-split;
         text-align: left;
 
-        .@{css-prefix}btn-long{
-            border-top-left-radius:0;
-            border-top-right-radius:0;
+        .@{css-prefix}btn-long {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
         }
     }
 
     // end
 
-    &-multiple .@{css-prefix}tag{
+    &-multiple .@{css-prefix}tag {
         height: 24px;
         line-height: 22px;
         margin: 3px 4px 3px 0;
         max-width: 99%;
         position: relative;
-        span{
+        span {
             display: block;
             margin-right: 14px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        i{
+        i {
             display: block;
             position: absolute;
             right: 4px;
@@ -256,25 +269,25 @@
         }
     }
 
-    &-large&-multiple .@{css-prefix}tag{
+    &-large&-multiple .@{css-prefix}tag {
         height: 28px;
         line-height: 26px;
         font-size: @font-size-base;
-        i{
+        i {
             top: 6px;
         }
     }
 
-    &-small&-multiple .@{css-prefix}tag{
+    &-small&-multiple .@{css-prefix}tag {
         height: 17px;
         line-height: 15px;
         font-size: @font-size-small;
         padding: 0 6px;
         margin: 3px 4px 2px 0;
-        span{
+        span {
             margin-right: 14px;
         }
-        i{
+        i {
             top: 1px;
             right: 2px;
         }
@@ -286,7 +299,7 @@
         list-style: none;
     }
 
-    & &-dropdown{
+    & &-dropdown {
         width: auto;
     }
 }
@@ -295,11 +308,11 @@
 
 .@{select-prefix-cls}-multiple .@{select-item-prefix-cls} {
     position: relative;
-    &-selected{
+    &-selected {
         color: @selected-color;
         background: #fff;
     }
-    &-focus,&-selected:hover{
+    &-focus, &-selected:hover {
         background: @background-color-select-hover;
     }
 
@@ -308,7 +321,7 @@
         background: #fff;
     }
 
-    &-selected:after{
+    &-selected:after {
         .ivu-icon();
         //float: right;
         font-size: 24px;
@@ -334,15 +347,15 @@
     }
 }
 
-.@{form-item-prefix-cls}-error{
-    .@{select-prefix-cls}{
-        &-selection{
+.@{form-item-prefix-cls}-error {
+    .@{select-prefix-cls} {
+        &-selection {
             border: 1px solid @error-color;
         }
-        &-arrow{
+        &-arrow {
             color: @error-color;
         }
-        &-visible .@{select-prefix-cls}-selection{
+        &-visible .@{select-prefix-cls}-selection {
             .active-error;
         }
     }

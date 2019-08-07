@@ -5,6 +5,13 @@
     color: #ccc !important;
     cursor: @cursor-disabled;
 }
+// add by wan - - - - -
+.handler-disabled-highlight() {
+    opacity: 1;
+    color: #666 !important;
+    cursor: @cursor-disabled;
+}
+// add by wan - - - - -
 
 .@{input-number-prefix-cls} {
     @radius-wrap: 0 @btn-border-radius @btn-border-radius 0;
@@ -33,7 +40,7 @@
         transition: opacity @transition-time @ease-in-out;
     }
 
-    &:hover &-handler-wrap, &--show-handler &-handler-wrap{
+    &:hover &-handler-wrap, &--show-handler &-handler-wrap {
         opacity: 1;
     }
 
@@ -113,7 +120,13 @@
         &[disabled] {
             .disabled();
         }
-
+        // add by wan - - - - -
+        &-disabled-highlight {
+            &[disabled] {
+                .disabled-highlight();
+            }
+        }
+        // add by wan - - - - -
         &::placeholder {
             color: @input-placeholder-color;
         }
@@ -164,8 +177,6 @@
         }
     }
 
-
-
     &-handler-down-disabled,
     &-handler-up-disabled,
     &-disabled {
@@ -188,10 +199,32 @@
             .handler-disabled();
         }
     }
+    // add by wan - - - - -
+    &-disabled-highlight {
+        .@{input-number-prefix-cls}-handler-down-inner,
+        .@{input-number-prefix-cls}-handler-up-inner {
+            .handler-disabled-highlight();
+        }
+    }
+
+    &-disabled-highlight {
+        .@{input-number-prefix-cls}-input {
+            opacity: 1;
+            cursor: @cursor-disabled;
+            background-color: #f3f3f3;
+        }
+        .@{input-number-prefix-cls}-handler-wrap {
+            display: none;
+        }
+        .@{input-number-prefix-cls}-handler {
+            .handler-disabled-highlight();
+        }
+    }
+    // add by wan - - - - -
 }
 
 .@{form-item-prefix-cls}-error {
-    .@{input-number-prefix-cls}{
+    .@{input-number-prefix-cls} {
         .input-error;
         &-focused {
             .active-error;

@@ -207,6 +207,7 @@ const install = function(Vue, opts = {}) {
     Vue.prototype.$Loading = LoadingBar;
     Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
+    Vue.prototype.$KModal = KModal;
     Vue.prototype.$Notice = Notice;
     Vue.prototype.$Spin = Spin;
 };

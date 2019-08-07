@@ -1,6 +1,7 @@
 .hover(@color: @input-hover-border-color) {
     border-color: tint(@color, 20%);
 }
+
 .hover-error() {
     border-color: @error-color;
 }
@@ -10,6 +11,7 @@
     outline: 0;
     box-shadow: 0 0 0 2px fade(@color, 20%);
 }
+
 .active-error() {
     border-color: @error-color;
     outline: 0;
@@ -25,6 +27,18 @@
         .hover(@input-border-color);
     }
 }
+// add by wan - - - - -00
+.disabled-highlight() {
+    background-color: @input-disabled-bg;
+    opacity: 1;
+    cursor: @cursor-disabled;
+    color: #666;
+    -webkit-text-fill-color: #666;
+    &:hover {
+        .hover(@input-border-color);
+    }
+}
+// add by wan - - - - -
 
 .input-large() {
     font-size: @font-size-base;
@@ -39,21 +53,22 @@
 }
 
 .input-textarea-small() {
-    padding-top:2px;
-    padding-bottom:2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .input-textarea () {
-  padding-top:6px;
-  padding-bottom:6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .input-textarea-large() {
-    textarea&{
+    textarea& {
         font-size: 14px;
-    };
-    padding-top:6px;
-    padding-bottom:6px;
+    }
+;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .input() {
@@ -85,6 +100,13 @@
     fieldset[disabled] & {
         .disabled();
     }
+    // add by wan - - - - -
+    &-disabled-highlight {
+        &[disabled] {
+            .disabled-highlight();
+        }
+    }
+    // add by wan - - - - -
 
     // Reset height for textarea
     textarea& {
@@ -93,7 +115,7 @@
         min-height: @input-height-base;
         vertical-align: bottom;
         //font-size: @font-size-base;
-        font-size:@font-size-small;
+        font-size: @font-size-small;
     }
 
     // Size
@@ -106,7 +128,7 @@
     }
 
     &-textarea {
-      .input-textarea();
+        .input-textarea();
     }
 
     &-textarea-small {
@@ -136,7 +158,7 @@
     font-size: @font-size-small;
     top: 1px; // fixed when using in form inline,
 
-    &-large{
+    &-large {
         font-size: @font-size-base;
     }
 
@@ -161,21 +183,18 @@
         //}
     }
     &-with-prepend .@{inputClass},
-    &-with-prepend&-small .@{inputClass}
-    {
+    &-with-prepend&-small .@{inputClass} {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
     &-with-append .@{inputClass},
-    &-with-append&-small .@{inputClass}
-    {
+    &-with-append&-small .@{inputClass} {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
     &-prepend .@{css-prefix}btn,
-    &-append .@{css-prefix}btn
-    {
+    &-append .@{css-prefix}btn {
         border-color: transparent;
         background-color: transparent;
         color: inherit;
@@ -183,8 +202,7 @@
     }
 
     &-prepend,
-    &-append
-    {
+    &-append {
         width: 1px; // To make addon/wrap as small as possible
         white-space: nowrap;
         vertical-align: middle;
@@ -199,8 +217,7 @@
     }
 
     &-prepend,
-    &-append
-    {
+    &-append {
         padding: @input-padding-vertical-base @input-padding-horizontal;
         font-size: inherit;
         font-weight: normal;
@@ -213,7 +230,7 @@
 
         // Reset Select's style in addon
         .@{css-prefix}select {
-            margin: -(@input-padding-vertical-base + 1) (-@input-padding-horizontal);  // lesshint spaceAroundOperator: false
+            margin: -(@input-padding-vertical-base + 1) (-@input-padding-horizontal); // lesshint spaceAroundOperator: false
 
             &-selection {
                 background-color: inherit;
@@ -221,7 +238,7 @@
                 border: 1px solid transparent;
             }
 
-            &-visible .@{css-prefix}select-selection{
+            &-visible .@{css-prefix}select-selection {
                 box-shadow: none;
             }
         }
@@ -230,8 +247,7 @@
     // Reset rounded corners
     > span > .@{inputClass}:first-child,
     > .@{inputClass}:first-child,
-    &-prepend
-    {
+    &-prepend {
         border-bottom-right-radius: 0 !important;
         border-top-right-radius: 0 !important;
 
@@ -250,8 +266,7 @@
     }
 
     > .@{inputClass}:last-child,
-    &-append
-    {
+    &-append {
         border-bottom-left-radius: 0 !important;
         border-top-left-radius: 0 !important;
 
@@ -265,23 +280,20 @@
     // Sizing options
     &-large .@{inputClass},
     &-large > &-prepend,
-    &-large > &-append
-    {
+    &-large > &-append {
         .input-large();
     }
 
     &-small .@{inputClass},
     &-small > &-prepend,
-    &-small > &-append
-    {
+    &-small > &-append {
         .input-small();
     }
 }
 
-.input-group-error{
+.input-group-error {
     &-prepend,
-    &-append
-    {
+    &-append {
         background-color: #fff;
         border: 1px solid @error-color;
         .@{css-prefix}select {

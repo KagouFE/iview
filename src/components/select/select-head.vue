@@ -14,7 +14,7 @@
             v-if="filterable"
             v-model="query"
             :disabled="disabled"
-            :class="[prefixCls + '-input']"
+            :class="inputClasses"
             :placeholder="showPlaceholder ? localePlaceholder : ''"
             :style="inputStyle"
             autocomplete="off"
@@ -25,7 +25,8 @@
             @blur="onInputBlur"
 
             ref="input">
-        <Icon type="ios-close-circle" :class="[prefixCls + '-arrow']" v-if="resetSelect" @click.native.stop="onClear"></Icon>
+        <Icon type="ios-close-circle" :class="[prefixCls + '-arrow']" v-if="resetSelect"
+              @click.native.stop="onClear"></Icon>
         <Icon type="ios-arrow-down" :class="[prefixCls + '-arrow']" v-if="!resetSelect && !remote && !disabled"></Icon>
     </div>
 </template>
@@ -38,8 +39,8 @@
 
     export default {
         name: 'iSelectHead',
-        mixins: [ Emitter, Locale ],
-        components: { Icon },
+        mixins: [Emitter, Locale],
+        components: {Icon},
         props: {
             disabled: {
                 type: Boolean,
@@ -77,7 +78,11 @@
             queryProp: {
                 type: String,
                 default: ''
-            }
+            },
+            disabledHighlight: {
+                type: Boolean,
+                default: false
+            },
         },
         data () {
             return {
@@ -89,14 +94,22 @@
             };
         },
         computed: {
-            singleDisplayClasses(){
+            inputClasses () {
+                return [
+                    `${prefixCls}-input`,
+                    {
+                        [`${prefixCls}-input-disabled-highlight`]: this.disabled && this.disabledHighlight && !this.showPlaceholder,
+                    }
+                ];
+            },
+            singleDisplayClasses () {
                 const {filterable, multiple, showPlaceholder} = this;
                 return [{
                     [prefixCls + '-placeholder']: showPlaceholder && !filterable,
                     [prefixCls + '-selected-value']: !showPlaceholder && !multiple && !filterable,
                 }];
             },
-            singleDisplayValue(){
+            singleDisplayValue () {
                 if ((this.multiple && this.values.length > 0) || this.filterable) return '';
                 return `${this.selectedSingle}` || this.localePlaceholder;
             },
@@ -104,7 +117,7 @@
                 let status = false;
                 if (!this.multiple) {
                     const value = this.values[0];
-                    if (typeof value === 'undefined' || String(value).trim() === ''){
+                    if (typeof value === 'undefined' || String(value).trim() === '') {
                         status = !this.remoteInitialLabel;
                     }
                 } else {
@@ -114,7 +127,7 @@
                 }
                 return status;
             },
-            resetSelect(){
+            resetSelect () {
                 return !this.showPlaceholder && this.clearable;
             },
             inputStyle () {
@@ -137,16 +150,16 @@
                     return this.placeholder;
                 }
             },
-            selectedSingle(){
+            selectedSingle () {
                 const selected = this.values[0];
                 return selected ? selected.label : (this.remoteInitialLabel || '');
             },
-            selectedMultiple(){
+            selectedMultiple () {
                 return this.multiple ? this.values : [];
             }
         },
         methods: {
-            onInputFocus(){
+            onInputFocus () {
                 this.$emit('on-input-focus');
             },
             onInputBlur () {
@@ -166,12 +179,12 @@
                     this.removeTag(this.selectedMultiple[this.selectedMultiple.length - 1]);
                 }
             },
-            onHeaderClick(e){
-                if (this.filterable && e.target === this.$el){
+            onHeaderClick (e) {
+                if (this.filterable && e.target === this.$el) {
                     this.$refs.input.focus();
                 }
             },
-            onClear(){
+            onClear () {
                 this.$emit('on-clear');
             }
         },
@@ -179,7 +192,7 @@
             values ([value]) {
                 if (!this.filterable) return;
                 this.preventRemoteCall = true;
-                if (this.multiple){
+                if (this.multiple) {
                     this.query = '';
                     this.preventRemoteCall = false; // this should be after the query change setter above
                     return;
@@ -197,7 +210,7 @@
 
                 this.$emit('on-query-change', val);
             },
-            queryProp(query){
+            queryProp (query) {
                 if (query !== this.query) this.query = query;
             },
         }

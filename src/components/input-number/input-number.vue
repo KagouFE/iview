@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-    import { oneOf, findComponentUpward } from '../../utils/assist';
+    import {oneOf, findComponentUpward} from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
 
     const prefixCls = 'ivu-input-number';
@@ -66,7 +66,7 @@
 
     export default {
         name: 'InputNumber',
-        mixins: [ Emitter ],
+        mixins: [Emitter],
         props: {
             'show-handler': {
                 validator (value) {
@@ -135,6 +135,10 @@
                 type: String,
                 default: ''
             },
+            disabledHighlight: {
+                type: Boolean,
+                default: false
+            },
         },
         data () {
             return {
@@ -151,6 +155,9 @@
                     {
                         [`${prefixCls}-${this.size}`]: !!this.size,
                         [`${prefixCls}-disabled`]: this.disabled,
+                        // add by wan - - - - -
+                        [`${prefixCls}-disabled-highlight`]: this.value && this.disabled && this.disabledHighlight,
+                        // add by wan - - - - -
                         [`${prefixCls}-focused`]: this.focused,
                         [`${prefixCls}--show-handler`]: this.showHandler === true
                     }
@@ -187,11 +194,18 @@
                 return `${prefixCls}-input-wrap`;
             },
             inputClasses () {
-                return `${prefixCls}-input`;
+                // add by wan - - - - -
+                return [
+                    `${prefixCls}-input`,
+                    {
+                        [`${prefixCls}-input-disabled-highlight`]: this.value && this.disabled && this.disabledHighlight,
+                    }
+                ];
+                // add by wan - - - - -
             },
             precisionValue () {
                 // can not display 1.0
-                if(!this.currentValue) return this.currentValue;
+                if (!this.currentValue) return this.currentValue;
                 return this.precision ? this.currentValue.toFixed(this.precision) : this.currentValue;
             },
             formatterValue () {
@@ -261,7 +275,7 @@
                 if (val && !isNaN(this.precision)) val = Number(Number(val).toFixed(this.precision));
 
                 const {min, max} = this;
-                if (val!==null) {
+                if (val !== null) {
                     if (val > max) {
                         val = max;
                     } else if (val < min) {
@@ -304,13 +318,13 @@
                     val = this.parser(val);
                 }
 
-                if(val === '') this.setValue(null); // Add By FEN 当回退到空值的时候让输入框的值为空，而不是 0
+                if (val === '') this.setValue(null); // Add By FEN 当回退到空值的时候让输入框的值为空，而不是 0
 
                 if (event.type == 'input' && val.match(/^\-?\.?$|\.$/)) return; // prevent fire early if decimal. If no more input the change event will fire later
 
                 const {min, max} = this;
                 const isEmptyString = val.length === 0;
-                if(isEmptyString){
+                if (isEmptyString) {
                     this.setValue(null);
                     return;
                 }

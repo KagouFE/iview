@@ -4,6 +4,7 @@
         class="ivu-auto-complete"
         :label="label"
         :disabled="disabled"
+        :disabledHighlight="disabledHighlight"
         :clearable="clearable"
         :placeholder="placeholder"
         :size="size"
@@ -25,6 +26,7 @@
                 :placeholder="placeholder"
                 :disabled="disabled"
                 :size="size"
+                :disabledHighlight="disabledHighlight"
                 :icon="inputIcon"
                 @on-click="handleClear"
                 @on-focus="handleFocus"
@@ -102,7 +104,11 @@
             },
             elementId: {
                 type: String
-            }
+            } ,
+            disabledHighlight: {
+                type: Boolean,
+                default: false
+            },
         },
         data () {
             return {

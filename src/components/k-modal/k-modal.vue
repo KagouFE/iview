@@ -11,11 +11,13 @@
         <div>
             <Icon :type="'md'+'-'+icon" size="28" color="#f90"/>
             <span class="ivu-modal-confirm-head-title">{{title}}</span></div>
-        <div class="ivu-modal-confirm-body mt8"><p>{{content}}</p></div>
+        <div class="ivu-modal-confirm-body mt8">{{content}}
+            <div v-if="secondContent">{{secondContent}}</div>
+        </div>
         <k-split transparent/>
         <div align="right">
-            <Button @click="cancel">{{cancelText}}</Button>
-            <Button @click="ok">{{okText}}</Button>
+            <Button @click="cancel" :disabled="cancelDisabled">{{cancelText}}</Button>
+            <Button @click="ok" :disabled="okDisabled">{{okText}}</Button>
         </div>
     </Modal>
 </template>
@@ -30,8 +32,6 @@
         data () {
             return {
                 newValue: false,
-                isClose: false,
-                isOk: false,
             };
         },
         props: {
@@ -44,7 +44,11 @@
             },
             content: {
                 type: String,
-                default: 'Are you sure you want to leave? There are unsaved changes. If you leave, your changes will be lost.'
+                default: 'Are you sure you want to leave? There are unsaved changes.If you leave, your changes will be lost.'
+            },
+            secondContent: {
+                type: String,
+                default: ''
             },
             okText: {
                 type: String,
@@ -64,10 +68,17 @@
                 validator (value) {
                     return oneOf(value, ['alert', 'help-circle']);
                 },
+            },
+            okDisabled: {
+                type: Boolean,
+                default: false
+            },
+            cancelDisabled: {
+                type: Boolean,
+                default: false
             }
         },
-        computed: {
-        },
+        computed: {},
         methods: {
             cancel () {
                 this.$emit('cancel', this.newValue);

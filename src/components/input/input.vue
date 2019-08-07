@@ -1,13 +1,23 @@
 <template>
     <div :class="wrapClasses">
         <template v-if="type !== 'textarea'">
-            <div :class="[prefixCls + '-group-prepend']" v-if="prepend" v-show="slotReady"><slot name="prepend"></slot></div>
-            <i class="ivu-icon" :class="['ivu-icon-ios-close-circle', prefixCls + '-icon', prefixCls + '-icon-clear' , prefixCls + '-icon-normal']" v-if="clearable && currentValue && !disabled" @click="handleClear"></i>
-            <i class="ivu-icon" :class="['ivu-icon-' + icon, prefixCls + '-icon', prefixCls + '-icon-normal']" v-else-if="icon" @click="handleIconClick"></i>
-            <i class="ivu-icon ivu-icon-ios-search" :class="[prefixCls + '-icon', prefixCls + '-icon-normal', prefixCls + '-search-icon']" v-else-if="search && enterButton === false" @click="handleSearch"></i>
-            <span class="ivu-input-suffix" v-else-if="showSuffix"><slot name="suffix"><i class="ivu-icon" :class="['ivu-icon-' + suffix]" v-if="suffix"></i></slot></span>
+            <div :class="[prefixCls + '-group-prepend']" v-if="prepend" v-show="slotReady">
+                <slot name="prepend"></slot>
+            </div>
+            <i class="ivu-icon"
+               :class="['ivu-icon-ios-close-circle', prefixCls + '-icon', prefixCls + '-icon-clear' , prefixCls + '-icon-normal']"
+               v-if="clearable && currentValue && !disabled" @click="handleClear"></i>
+            <i class="ivu-icon" :class="['ivu-icon-' + icon, prefixCls + '-icon', prefixCls + '-icon-normal']"
+               v-else-if="icon" @click="handleIconClick"></i>
+            <i class="ivu-icon ivu-icon-ios-search"
+               :class="[prefixCls + '-icon', prefixCls + '-icon-normal', prefixCls + '-search-icon']"
+               v-else-if="search && enterButton === false" @click="handleSearch"></i>
+            <span class="ivu-input-suffix" v-else-if="showSuffix"><slot name="suffix"><i class="ivu-icon"
+                                                                                         :class="['ivu-icon-' + suffix]"
+                                                                                         v-if="suffix"></i></slot></span>
             <transition name="fade">
-                <i class="ivu-icon ivu-icon-ios-loading ivu-load-loop" :class="[prefixCls + '-icon', prefixCls + '-icon-validate']" v-if="!icon"></i>
+                <i class="ivu-icon ivu-icon-ios-loading ivu-load-loop"
+                   :class="[prefixCls + '-icon', prefixCls + '-icon-validate']" v-if="!icon"></i>
             </transition>
             <input
                 :id="elementId"
@@ -35,12 +45,17 @@
                 @compositionend="handleComposition"
                 @input="handleInput"
                 @change="handleChange">
-            <div :class="[prefixCls + '-group-append']" v-if="append" v-show="slotReady"><slot name="append"></slot></div>
-            <div :class="[prefixCls + '-group-append', prefixCls + '-search']" v-else-if="search && enterButton" @click="handleSearch">
+            <div :class="[prefixCls + '-group-append']" v-if="append" v-show="slotReady">
+                <slot name="append"></slot>
+            </div>
+            <div :class="[prefixCls + '-group-append', prefixCls + '-search']" v-else-if="search && enterButton"
+                 @click="handleSearch">
                 <i class="ivu-icon ivu-icon-ios-search" v-if="enterButton === true"></i>
                 <template v-else>{{ enterButton }}</template>
             </div>
-            <span class="ivu-input-prefix" v-else-if="showPrefix"><slot name="prefix"><i class="ivu-icon" :class="['ivu-icon-' + prefix]" v-if="prefix"></i></slot></span>
+            <span class="ivu-input-prefix" v-else-if="showPrefix"><slot name="prefix"><i class="ivu-icon"
+                                                                                         :class="['ivu-icon-' + prefix]"
+                                                                                         v-if="prefix"></i></slot></span>
         </template>
         <textarea
             v-else
@@ -73,7 +88,7 @@
     </div>
 </template>
 <script>
-    import { oneOf, findComponentUpward } from '../../utils/assist';
+    import {oneOf, findComponentUpward} from '../../utils/assist';
     import calcTextareaHeight from '../../utils/calcTextareaHeight';
     import Emitter from '../../mixins/emitter';
 
@@ -81,7 +96,7 @@
 
     export default {
         name: 'Input',
-        mixins: [ Emitter ],
+        mixins: [Emitter],
         props: {
             type: {
                 validator (value) {
@@ -184,6 +199,10 @@
                 type: Boolean,
                 default: false
             },
+            disabledHighlight: {
+                type: Boolean,
+                default: false
+            },
         },
         data () {
             return {
@@ -210,7 +229,7 @@
                         [`${prefixCls}-group-with-prepend`]: this.prepend,
                         [`${prefixCls}-group-with-append`]: this.append || (this.search && this.enterButton),
                         [`${prefixCls}-hide-icon`]: this.append,  // #554
-                        [`${prefixCls}-with-search`]: (this.search && this.enterButton)
+                        [`${prefixCls}-with-search`]: (this.search && this.enterButton),
                     }
                 ];
             },
@@ -220,6 +239,7 @@
                     {
                         [`${prefixCls}-${this.size}`]: !!this.size,
                         [`${prefixCls}-disabled`]: this.disabled,
+                        [`${prefixCls}-disabled-highlight`]: this.value && this.disabled && this.disabledHighlight,
                         // add by FEN
                         ['uppercase']: this.upperCase && this.currentValue,
                         ['lowercase']: this.lowerCase && this.currentValue,
@@ -234,6 +254,7 @@
                     `${prefixCls}`, `${prefixCls}-textarea`,
                     {
                         [`${prefixCls}-disabled`]: this.disabled,
+                        [`${prefixCls}-disabled-highlight`]: this.value && this.disabled && this.disabledHighlight,
                         [`${prefixCls}-textarea-${this.size}`]: !!this.size, // add by FEN 解决 textarea 一行的时候高度和 input 不一致
                         // add by FEN
                         ['uppercase']: this.upperCase && this.currentValue,
@@ -268,7 +289,7 @@
                     this.dispatch('FormItem', 'on-form-blur', this.currentValue);
                 }
             },
-            handleComposition(event) {
+            handleComposition (event) {
                 if (event.type === 'compositionstart') {
                     this.isOnComposition = true;
                 }
@@ -325,7 +346,7 @@
                 }
             },
             handleClear () {
-                const e = { target: { value: '' } };
+                const e = {target: {value: ''}};
                 this.$emit('input', '');
                 this.setCurrentValue('');
                 this.$emit('on-change', e);

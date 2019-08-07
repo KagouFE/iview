@@ -15,12 +15,21 @@
                         <div :class="[prefixCls + '-header']"
                              @mousedown="handleMoveStart"
                              v-if="showHead"
-                        ><slot name="header"><div :class="[prefixCls + '-header-inner']">{{ title }}</div></slot></div>
-                        <div :class="[prefixCls + '-body']"><slot></slot></div>
+                        >
+                            <slot name="header">
+                                <div :class="[prefixCls + '-header-inner']">{{ title }}</div>
+                            </slot>
+                        </div>
+                        <div :class="[prefixCls + '-body']">
+                            <slot></slot>
+                        </div>
                         <div :class="[prefixCls + '-footer']" v-if="!footerHide">
                             <slot name="footer">
-                                <i-button type="text" size="large" @click.native="cancel">{{ localeCancelText }}</i-button>
-                                <i-button type="primary" size="large" :loading="buttonLoading" @click.native="ok">{{ localeOkText }}</i-button>
+                                <i-button type="text" size="large" @click.native="cancel">{{ localeCancelText }}
+                                </i-button>
+                                <i-button type="primary" size="large" :loading="buttonLoading" @click.native="ok">
+                                    {{ localeOkText }}
+                                </i-button>
                             </slot>
                         </div>
                     </div>
@@ -37,18 +46,18 @@
     import Emitter from '../../mixins/emitter';
     import ScrollbarMixins from './mixins-scrollbar';
 
-    import { on, off } from '../../utils/dom';
-    import { findComponentsDownward } from '../../utils/assist';
+    import {on, off} from '../../utils/dom';
+    import {findComponentsDownward} from '../../utils/assist';
 
-    import { transferIndex as modalIndex, transferIncrease as modalIncrease } from '../../utils/transfer-queue';
+    import {transferIncrease as modalIncrease} from '../../utils/index-queue';
 
     const prefixCls = 'ivu-modal';
 
     export default {
         name: 'Modal',
-        mixins: [ Locale, Emitter, ScrollbarMixins ],
-        components: { Icon, iButton },
-        directives: { TransferDom },
+        mixins: [Locale, Emitter, ScrollbarMixins],
+        components: {Icon, iButton},
+        directives: {TransferDom},
         props: {
             value: {
                 type: Boolean,
@@ -122,6 +131,10 @@
                 type: Number,
                 default: 1000
             },
+            maskCallBack: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
@@ -153,7 +166,7 @@
             },
             wrapStyles () {
                 return {
-                    zIndex: this.modalIndex + this.zIndex
+                    zIndex: window.sysZIndex + this.zIndex // update by lan     globe zIndex
                 };
             },
             maskClasses () {
@@ -231,9 +244,16 @@
         },
         methods: {
             close () {
-                this.visible = false;
-                this.$emit('input', false);
-                this.$emit('on-cancel');
+                const next = () => {
+                    this.visible = false;
+                    this.$emit('input', false);
+                    this.$emit('on-cancel');
+                }
+                if (this.maskCallBack) {
+                    this.$emit('mask-esc-close', next);
+                } else {
+                    next();
+                }
             },
             handleMask () {
                 if (this.maskClosable && this.showMask) {
@@ -272,7 +292,7 @@
                     }
                 }
             },
-            animationFinish() {
+            animationFinish () {
                 this.$emit('on-hidden');
             },
             handleMoveStart (event) {
@@ -322,7 +342,7 @@
             },
             handleGetModalIndex () {
                 modalIncrease();
-                return modalIndex;
+                return window.sysZIndex;
             },
             handleClickModal () {
                 if (this.draggable) {
