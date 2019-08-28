@@ -43,7 +43,7 @@
         }
 
         .@{select-prefix-cls}-arrow {
-            transform: rotate(180deg);
+            transform: translateY(-50%) rotate(180deg);
             display: inline-block;
         }
     }
@@ -53,7 +53,7 @@
             .disabled();
 
             .@{select-prefix-cls}-arrow {
-                display: none;
+                color: @slider-disabled-color;
             }
 
             &:hover {
@@ -194,22 +194,22 @@
         // add by wan - - - - -
     }
 
-    &-single &-input {
+    &-single &-input{
         width: 100%;
     }
 
-    &-large &-input {
+    &-large &-input{
         font-size: @font-size-base;
         height: @input-height-large;
     }
 
-    &-small &-input {
+    &-small &-input{
         height: @input-height-small - 2px;
         line-height: @input-height-small - 2px;
     }
 
-    &-multiple &-input {
-        height: @input-height-base - 3px;
+    &-multiple &-input{
+        height: @input-height-base - 2px;
         line-height: @input-height-base;
         padding: 0 0 0 4px;
     }
@@ -254,7 +254,7 @@
         margin: 3px 4px 3px 0;
         max-width: 99%;
         position: relative;
-        span {
+        span:not(.ivu-select-max-tag){
             display: block;
             margin-right: 14px;
             overflow: hidden;
@@ -269,25 +269,25 @@
         }
     }
 
-    &-large&-multiple .@{css-prefix}tag {
+    &-large&-multiple .@{css-prefix}tag{
         height: 28px;
         line-height: 26px;
         font-size: @font-size-base;
-        i {
+        i{
             top: 6px;
         }
     }
 
-    &-small&-multiple .@{css-prefix}tag {
+    &-small&-multiple .@{css-prefix}tag{
         height: 17px;
         line-height: 15px;
         font-size: @font-size-small;
         padding: 0 6px;
         margin: 3px 4px 2px 0;
-        span {
+        span{
             margin-right: 14px;
         }
-        i {
+        i{
             top: 1px;
             right: 2px;
         }
@@ -299,8 +299,35 @@
         list-style: none;
     }
 
-    & &-dropdown {
+    & &-dropdown{
         width: auto;
+    }
+
+    &-prefix{
+        display: inline-block;
+        vertical-align: middle;
+        i{
+            vertical-align: top;
+        }
+    }
+    &-head-with-prefix{
+        display: inline-block !important;
+        vertical-align: middle;
+    }
+    &-single &-prefix{
+        padding-left: 4px;
+    }
+    &-single &-head-with-prefix, &-multiple &-head-with-prefix{
+        padding-left: 0 !important;
+    }
+
+    &-head-flex{
+        display: flex;
+        align-items: center;
+    }
+
+    &-multiple &-head-flex &-prefix{
+        margin-right: 4px;
     }
 }
 
@@ -308,11 +335,11 @@
 
 .@{select-prefix-cls}-multiple .@{select-item-prefix-cls} {
     position: relative;
-    &-selected {
+    &-selected{
         color: @selected-color;
         background: #fff;
     }
-    &-focus, &-selected:hover {
+    &-focus,&-selected:hover{
         background: @background-color-select-hover;
     }
 
@@ -321,7 +348,7 @@
         background: #fff;
     }
 
-    &-selected:after {
+    &-selected:after{
         .ivu-icon();
         //float: right;
         font-size: 24px;
@@ -347,15 +374,15 @@
     }
 }
 
-.@{form-item-prefix-cls}-error {
-    .@{select-prefix-cls} {
-        &-selection {
+.@{form-item-prefix-cls}-error{
+    .@{select-prefix-cls}{
+        &-selection{
             border: 1px solid @error-color;
         }
-        &-arrow {
+        &-arrow{
             color: @error-color;
         }
-        &-visible .@{select-prefix-cls}-selection {
+        &-visible .@{select-prefix-cls}-selection{
             .active-error;
         }
     }

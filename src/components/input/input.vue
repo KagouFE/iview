@@ -156,9 +156,7 @@
                 default: false
             },
             autocomplete: {
-                validator (value) {
-                    return oneOf(value, ['on', 'off']);
-                },
+                type: String,
                 default: 'off'
             },
             clearable: {
@@ -350,6 +348,7 @@
                 this.$emit('input', '');
                 this.setCurrentValue('');
                 this.$emit('on-change', e);
+                this.$emit('on-clear');
             },
             handleSearch () {
                 if (this.disabled) return false;

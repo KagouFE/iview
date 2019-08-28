@@ -3,6 +3,7 @@
         :class="classes"
         v-click-outside.capture="onClickOutside"
         v-click-outside:mousedown.capture="onClickOutside"
+        v-click-outside:touchstart.capture="onClickOutside"
     >
         <div
             ref="reference"
@@ -33,6 +34,7 @@
                     :multiple="multiple"
                     :values="values"
                     :clearable="canBeCleared"
+                    :prefix="prefix"
                     :disabled="disabled"
                     :disabledHighlight="disabledHighlight"
                     :remote="remote"
@@ -40,12 +42,16 @@
                     :initial-label="initialLabel"
                     :placeholder="placeholder"
                     :query-prop="query"
+                    :max-tag-count="maxTagCount"
+                    :max-tag-placeholder="maxTagPlaceholder"
 
                     @on-query-change="onQueryChange"
                     @on-input-focus="isFocused = true"
                     @on-input-blur="isFocused = false"
                     @on-clear="clearSingleSelect"
-                />
+                >
+                    <slot name="prefix" slot="prefix"></slot>
+                </select-head>
             </slot>
         </div>
         <transition name="transition-drop">
@@ -58,9 +64,7 @@
                 :transfer="transfer"
                 v-transfer-dom
             >
-                <ul v-show="showNotFoundLabel" :class="[prefixCls + '-not-found']">
-                    <li>{{ localeNotFoundText }}</li>
-                </ul>
+                <ul v-show="showNotFoundLabel" :class="[prefixCls + '-not-found']"><li>{{ localeNotFoundText }}</li></ul>
                 <ul :class="prefixCls + '-dropdown-list'">
                     <functional-options
                         v-if="(!remote) || (remote && !loading)"
@@ -85,7 +89,7 @@
     import Drop from './dropdown.vue';
     import {directive as clickOutside} from 'v-click-outside-x';
     import TransferDom from '../../directives/transfer-dom';
-    import {oneOf} from '../../utils/assist';
+    import { oneOf } from '../../utils/assist';
     import Emitter from '../../mixins/emitter';
     import Locale from '../../mixins/locale';
     import SelectHead from './select-head.vue';
@@ -98,7 +102,7 @@
     const findChild = (instance, checkFn) => {
         let match = checkFn(instance);
         if (match) return instance;
-        for (let i = 0, l = instance.$children.length; i < l; i++) {
+        for (let i = 0, l = instance.$children.length; i < l; i++){
             const child = instance.$children[i];
             match = findChild(child, checkFn);
             if (match) return match;
@@ -145,10 +149,10 @@
         return textContent || (typeof innerHTML === 'string' ? innerHTML : '');
     };
 
-    const checkValuesNotEqual = (value, publicValue, values) => {
+    const checkValuesNotEqual = (value,publicValue,values) => {
         const strValue = JSON.stringify(value);
         const strPublic = JSON.stringify(publicValue);
-        const strValues = JSON.stringify(values.map(item => {
+        const strValues = JSON.stringify(values.map( item => {
             return item.value;
         }));
         return strValue !== strPublic || strValue !== strValues || strValues !== strPublic;
@@ -159,9 +163,9 @@
 
     export default {
         name: 'iSelect',
-        mixins: [Emitter, Locale],
-        components: {FunctionalOptions, Drop, SelectHead},
-        directives: {clickOutside, TransferDom},
+        mixins: [ Emitter, Locale ],
+        components: { FunctionalOptions, Drop, SelectHead },
+        directives: { clickOutside, TransferDom },
         props: {
             extra: {
                 type: Boolean,
@@ -257,12 +261,24 @@
                 type: Boolean,
                 default: false
             },
+            // 3.4.0
+            prefix: {
+                type: String
+            },
+            // 3.4.0
+            maxTagCount: {
+                type: Number
+            },
+            // 3.4.0
+            maxTagPlaceholder: {
+                type: Function
+            }
         },
-        mounted () {
+        mounted(){
             this.$on('on-select-selected', this.onOptionClick);
 
             // set the initial values if there are any
-            if (!this.remote && this.selectOptions.length > 0) {
+            if (!this.remote && this.selectOptions.length > 0){
                 this.values = this.getInitialValue().map(value => {
                     if (typeof value !== 'number' && !value) return null;
                     return this.getOptionData(value);
@@ -359,19 +375,19 @@
                 const {loading, remote, selectOptions} = this;
                 return selectOptions && selectOptions.length === 0 && (!remote || (remote && !loading));
             },
-            publicValue () {
-                if (this.labelInValue) {
+            publicValue(){
+                if (this.labelInValue){
                     return this.multiple ? this.values : this.values[0];
                 } else {
                     return this.multiple ? this.values.map(option => option.value) : (this.values[0] || {}).value;
                 }
             },
-            canBeCleared () {
+            canBeCleared(){
                 const uiStateMatch = this.hasMouseHoverHead || this.active;
                 const qualifiesForClear = !this.multiple && !this.disabled && this.clearable;
                 return uiStateMatch && qualifiesForClear && this.reset; // we return a function
             },
-            selectOptions () {
+            selectOptions() {
                 const selectOptions = [];
                 const slotOptions = (this.slotOptions || []);
                 let optionCounter = -1;
@@ -399,11 +415,11 @@
 
                     const cOptions = option.componentOptions;
                     if (!cOptions) continue;
-                    if (cOptions.tag.match(optionGroupRegexp)) {
+                    if (cOptions.tag.match(optionGroupRegexp)){
                         let children = cOptions.children;
 
                         // remove filtered children
-                        if (this.filterable) {
+                        if (this.filterable){
                             children = children.filter(
                                 ({componentOptions}) => this.validateOption(componentOptions)
                             );
@@ -416,10 +432,7 @@
                         });
 
                         // keep the group if it still has children  // fix #4371
-                        if (children.length > 0) selectOptions.push({
-                            ...option,
-                            componentOptions: {...cOptions, children: children}
-                        });
+                        if (children.length > 0) selectOptions.push({...option,componentOptions:{...cOptions,children:children}});
                     } else {
                         // ignore option if not passing filter
                         if (this.filterQueryChange) {
@@ -434,13 +447,13 @@
 
                 return selectOptions;
             },
-            flatOptions () {
+            flatOptions(){
                 return extractOptions(this.selectOptions);
             },
-            selectTabindex () {
+            selectTabindex(){
                 return this.disabled || this.filterable ? -1 : 0;
             },
-            remote () {
+            remote(){
                 return typeof this.remoteMethod === 'function';
             }
         },
@@ -457,14 +470,16 @@
                 if (query === null) {
                     this.onQueryChange('');
                     this.values = [];
+                    // #5620,修复清空搜索关键词后，重新搜索相同的关键词没有触发远程搜索
+                    this.lastRemoteQuery = '';
                 }
             },
-            clearSingleSelect () { // PUBLIC API
+            clearSingleSelect(){ // PUBLIC API
                 this.$emit('on-clear');
                 this.hideMenu();
                 if (this.clearable) this.reset();
             },
-            getOptionData (value) {
+            getOptionData(value){
                 const option = this.flatOptions.find(({componentOptions}) => componentOptions.propsData.value === value);
                 if (!option) return null;
                 const label = getOptionLabel(option);
@@ -473,7 +488,7 @@
                     label: label,
                 };
             },
-            getInitialValue () {
+            getInitialValue(){
                 const {multiple, remote, value} = this;
                 let initialValue = Array.isArray(value) ? value : [value];
                 if (!multiple && (typeof initialValue[0] === 'undefined' || (String(initialValue[0]).trim() === '' && !Number.isFinite(initialValue[0])))) initialValue = [];
@@ -485,7 +500,7 @@
                     return Boolean(item) || item === 0;
                 });
             },
-            processOption (option, values, isFocused) {
+            processOption(option, values, isFocused){
                 if (!option.componentOptions) return option;
                 const optionValue = option.componentOptions.propsData.value;
                 const disabled = option.componentOptions.propsData.disabled;
@@ -507,7 +522,7 @@
                 };
             },
 
-            validateOption ({children, elm, propsData}) {
+            validateOption({children, elm, propsData}){
                 const value = propsData.value;
                 const label = propsData.label || '';
                 const optionData = propsData.optionData;
@@ -536,7 +551,7 @@
                 }
 
                 this.visible = typeof force !== 'undefined' ? force : !this.visible;
-                if (this.visible) {
+                if (this.visible){
                     this.dropDownWidth = this.$el.getBoundingClientRect().width;
                     this.broadcast('Drop', 'on-update-popper');
                 }
@@ -545,7 +560,7 @@
                 this.toggleMenu(null, false);
                 setTimeout(() => this.unchangedQuery = true, ANIMATION_TIMEOUT);
             },
-            onClickOutside (event) {
+            onClickOutside(event){
                 if (this.visible) {
                     if (event.type === 'mousedown') {
                         event.preventDefault();
@@ -578,7 +593,7 @@
                     this.isFocused = false;
                 }
             },
-            reset () {
+            reset(){
                 this.query = '';
                 this.focusIndex = -1;
                 this.unchangedQuery = true;
@@ -586,13 +601,13 @@
                 this.filterQueryChange = false;
             },
             handleKeydown (e) {
-                if (e.key === 'Backspace') {
+                if (e.key === 'Backspace'){
                     return; // so we don't call preventDefault
                 }
 
                 if (this.visible) {
                     e.preventDefault();
-                    if (e.key === 'Tab') {
+                    if (e.key === 'Tab'){
                         e.stopPropagation();
                     }
 
@@ -629,7 +644,7 @@
 
 
             },
-            navigateOptions (direction) {
+            navigateOptions(direction){
                 const optionsLength = this.flatOptions.length - 1;
 
                 let index = this.focusIndex + direction;
@@ -637,9 +652,9 @@
                 if (index > optionsLength) index = 0;
 
                 // find nearest option in case of disabled options in between
-                if (direction > 0) {
+                if (direction > 0){
                     let nearestActiveOption = -1;
-                    for (let i = 0; i < this.flatOptions.length; i++) {
+                    for (let i = 0; i < this.flatOptions.length; i++){
                         const optionIsActive = !this.flatOptions[i].componentOptions.propsData.disabled;
                         if (optionIsActive) nearestActiveOption = i;
                         if (nearestActiveOption >= index) break;
@@ -647,7 +662,7 @@
                     index = nearestActiveOption;
                 } else {
                     let nearestActiveOption = this.flatOptions.length;
-                    for (let i = optionsLength; i >= 0; i--) {
+                    for (let i = optionsLength; i >= 0; i--){
                         const optionIsActive = !this.flatOptions[i].componentOptions.propsData.disabled;
                         if (optionIsActive) nearestActiveOption = i;
                         if (nearestActiveOption <= index) break;
@@ -657,15 +672,15 @@
 
                 this.focusIndex = index;
             },
-            onOptionClick (option) {
-                if (this.multiple) {
+            onOptionClick(option) {
+                if (this.multiple){
 
                     // keep the query for remote select
                     if (this.remote) this.lastRemoteQuery = this.lastRemoteQuery || this.query;
                     else this.lastRemoteQuery = '';
 
                     const valueIsSelected = this.values.find(({value}) => value === option.value);
-                    if (valueIsSelected) {
+                    if (valueIsSelected){
                         this.values = this.values.filter(({value}) => value !== option.value);
                     } else {
                         this.values = this.values.concat(option);
@@ -684,7 +699,7 @@
                     return opt.componentOptions.propsData.value === option.value;
                 });
 
-                if (this.filterable) {
+                if (this.filterable){
                     const inputField = this.$el.querySelector('input[type="text"]');
                     if (!this.autoComplete) this.$nextTick(() => inputField.focus());
                 }
@@ -693,11 +708,11 @@
                     this.filterQueryChange = false;
                 }, ANIMATION_TIMEOUT);
             },
-            onQueryChange (query) {
+            onQueryChange(query) {
                 if (query.length > 0 && query !== this.query) {
-                    // in 'AutoComplete', when set an initial value asynchronously,
-                    // the 'dropdown list' should be stay hidden.
-                    // [issue #5150]
+                  // in 'AutoComplete', when set an initial value asynchronously,
+                  // the 'dropdown list' should be stay hidden.
+                  // [issue #5150]
                     if (this.autoComplete) {
                         let isInputFocused =
                             document.hasFocus &&
@@ -713,16 +728,16 @@
                 this.unchangedQuery = this.visible;
                 this.filterQueryChange = true;
             },
-            toggleHeaderFocus ({type}) {
+            toggleHeaderFocus({type}){
                 if (this.disabled) {
                     return;
                 }
                 this.isFocused = type === 'focus';
             },
-            updateSlotOptions () {
+            updateSlotOptions(){
                 this.slotOptions = this.$slots.default;
             },
-            checkUpdateStatus () {
+            checkUpdateStatus() {
                 if (this.getInitialValue().length > 0 && this.selectOptions.length === 0) {
                     this.hasExpectedValue = true;
                 }
@@ -733,18 +748,18 @@
             },
         },
         watch: {
-            value (value) {
+            value(value){
                 const {getInitialValue, getOptionData, publicValue, values} = this;
 
                 this.checkUpdateStatus();
 
                 if (value === '') this.values = [];
-                else if (checkValuesNotEqual(value, publicValue, values)) {
+                else if (checkValuesNotEqual(value,publicValue,values)) {
                     this.$nextTick(() => this.values = getInitialValue().map(getOptionData).filter(Boolean));
                     this.dispatch('FormItem', 'on-form-change', this.publicValue);
                 }
             },
-            values (now, before) {
+            values(now, before){
                 const newValue = JSON.stringify(now);
                 const oldValue = JSON.stringify(before);
                 // v-model is always just the value, event with labelInValue === true
@@ -765,11 +780,11 @@
                 const shouldCallRemoteMethod = remoteMethod && hasValidQuery && !this.preventRemoteCall;
                 this.preventRemoteCall = false; // remove the flag
 
-                if (shouldCallRemoteMethod) {
+                if (shouldCallRemoteMethod){
                     this.focusIndex = -1;
                     const promise = this.remoteMethod(query);
                     this.initialLabel = '';
-                    if (promise && promise.then) {
+                    if (promise && promise.then){
                         promise.then(options => {
                             if (options) this.options = options;
                         });
@@ -780,18 +795,18 @@
                 // add by FEN
                 this.focusedAtFirstChild(query);
             },
-            loading (state) {
-                if (state === false) {
+            loading(state){
+                if (state === false){
                     this.updateSlotOptions();
                 }
             },
-            isFocused (focused) {
+            isFocused(focused){
                 const el = this.filterable ? this.$el.querySelector('input[type="text"]') : this.$el;
                 el[this.isFocused ? 'focus' : 'blur']();
 
                 // restore query value in filterable single selects
                 const [selectedOption] = this.values;
-                if (selectedOption && this.filterable && !this.multiple && !focused) {
+                if (selectedOption && this.filterable && !this.multiple && !focused){
                     const selectedLabel = String(selectedOption.label || selectedOption.value).trim();
                     if (selectedLabel && this.query !== selectedLabel) {
                         this.preventRemoteCall = true;
@@ -799,7 +814,7 @@
                     }
                 }
             },
-            focusIndex (index) {
+            focusIndex(index){
                 if (index < 0 || this.autoComplete) return;
                 // update scroll
                 const option = this.flatOptions[index];
@@ -818,11 +833,11 @@
                     this.$refs.dropdown.$el.scrollTop += topOverflowDistance;
                 }
             },
-            dropVisible (open) {
+            dropVisible(open){
                 this.broadcast('Drop', open ? 'on-update-popper' : 'on-destroy-popper');
             },
-            selectOptions () {
-                if (this.hasExpectedValue && this.selectOptions.length > 0) {
+            selectOptions(){
+                if (this.hasExpectedValue && this.selectOptions.length > 0){
                     if (this.values.length === 0) {
                         this.values = this.getInitialValue();
                     }
@@ -830,18 +845,18 @@
                     this.hasExpectedValue = false;
                 }
 
-                if (this.slotOptions && this.slotOptions.length === 0) {
+                if (this.slotOptions && this.slotOptions.length === 0){
                     this.query = '';
                 }
 
-                // 当 dropdown 一开始在控件下部显示，而滚动页面后变成在上部显示，如果选项列表的长度由内部动态变更了(搜索情况)
-                // dropdown 的位置不会重新计算，需要重新计算
+                 // 当 dropdown 一开始在控件下部显示，而滚动页面后变成在上部显示，如果选项列表的长度由内部动态变更了(搜索情况)
+                 // dropdown 的位置不会重新计算，需要重新计算
                 this.broadcast('Drop', 'on-update-popper');
             },
-            visible (state) {
+            visible(state){
                 this.$emit('on-open-change', state);
             },
-            slotOptions (options, old) {
+            slotOptions(options, old){
                 // #4626，当 Options 的 label 更新时，v-model 的值未更新
                 // remote 下，调用 getInitialValue 有 bug
                 if (!this.remote) {
