@@ -16,8 +16,8 @@
         </div>
         <k-split transparent/>
         <div align="right">
-            <Button @click="cancel" :disabled="cancelDisabled">{{cancelText}}</Button>
-            <Button @click="ok" :disabled="okDisabled">{{okText}}</Button>
+            <Button @click="cancel" :disabled="cancelDisabled" v-if="showCancel">{{cancelText}}</Button>
+            <Button @click="ok" :disabled="okDisabled" v-if="showOk">{{okText}}</Button>
         </div>
     </Modal>
 </template>
@@ -76,7 +76,15 @@
             cancelDisabled: {
                 type: Boolean,
                 default: false
-            }
+            },
+          showCancel:{
+            type:Boolean,
+            default: true
+          },
+          showOk:{
+            type:Boolean,
+            default: true
+          },
         },
         computed: {},
         methods: {

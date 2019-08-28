@@ -16,7 +16,7 @@
         transition: height @animation-time @ease-in-out, padding @animation-time @ease-in-out;
 
         &:first-child {
-          margin-top: -8px;
+            margin-top: -8px;
         }
 
         &-close {
@@ -52,32 +52,21 @@
         }
     }
 
-    &-success,&-warning,&-error  {
-        background: @success-color;
-        color: #fff;
-        .@{icon-prefix-cls}{
-            color: #fff;
-        }
-        .@{message-prefix-cls}-notice-close{
-            color: #fff;
-
-            i.@{icon-prefix-cls}{
-                .close-base(-3px, 22px, #fff);
-            }
-        }
+    &-success .@{icon-prefix-cls} {
+        color: @success-color;
     }
 
-    &-error  {
-        background: @error-color;
+    &-error .@{icon-prefix-cls} {
+        color: @error-color;
     }
 
-    &-warning  {
-        background: @warning-color;
+    &-warning .@{icon-prefix-cls} {
+        color: @warning-color;
     }
 
     &-info .@{icon-prefix-cls},
     &-loading .@{icon-prefix-cls} {
-        color: @info-color;
+        color: @primary-color;
     }
 
     .@{icon-prefix-cls} {
