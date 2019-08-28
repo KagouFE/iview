@@ -1,7 +1,7 @@
-@modal-prefix-cls: ~"@{css-prefix}modal";
-@confirm-prefix-cls: ~"@{css-prefix}modal-confirm";
+@k-modal-prefix-cls: ~"@{css-prefix}k-modal";
+@k-confirm-prefix-cls: ~"@{css-prefix}k-modal-confirm";
 
-.@{modal-prefix-cls} {
+.@{k-modal-prefix-cls} {
     width: auto;
     margin: 0 auto;
     position: relative;
@@ -39,18 +39,18 @@
         border: 0;
         border-radius: @border-radius-base;
         background-clip: padding-box;
-        box-shadow: 0 4px 12px rgba(0,0,0,.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
 
-        &-no-mask{
+        &-no-mask {
             pointer-events: auto;
         }
-        &-drag{
+        &-drag {
             position: absolute;
-            .@{modal-prefix-cls}-header{
+            .@{k-modal-prefix-cls}-header {
                 cursor: move;
             }
         }
-        &-dragging{
+        &-dragging {
             -webkit-user-select: none;
             -moz-user-select: none;
             user-select: none;
@@ -58,7 +58,26 @@
     }
 
     &-header {
-        .content-header;
+        //border-bottom: 1px solid @border-color-split;
+        padding: 14px 16px;
+        line-height: 1;
+
+        p,
+        &-inner {
+            display: inline-block;
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            font-size: @font-size-large;
+            color: @title-color;
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        p i, p span {
+            vertical-align: middle;
+        }
     }
 
     &-close {
@@ -80,12 +99,9 @@
             margin-left: 8px;
             margin-bottom: 0;
         }
-        &-align-left {
-            text-align: left;
-        }
     }
 
-    &-fullscreen{
+    &-fullscreen {
         width: 100% !important;
         top: 0;
         bottom: 0;
@@ -94,7 +110,7 @@
         @modal-header-height: 51px;
         @modal-footer-height: 61px;
 
-        .@{modal-prefix-cls}-content{
+        .@{k-modal-prefix-cls}-content {
             width: 100%;
             border-radius: 0;
             position: absolute;
@@ -102,47 +118,49 @@
             bottom: 0;
         }
 
-        .@{modal-prefix-cls}-body{
+        .@{k-modal-prefix-cls}-body {
             width: 100%;
             overflow: auto;
             position: absolute;
             top: @modal-header-height;
             bottom: @modal-footer-height;
         }
-        &-no-header .@{modal-prefix-cls}-body{
+        &-no-header .@{k-modal-prefix-cls}-body {
             top: 0;
         }
-        &-no-footer .@{modal-prefix-cls}-body{
+        &-no-footer .@{k-modal-prefix-cls}-body {
             bottom: 0;
         }
-        .@{modal-prefix-cls}-footer{
+        .@{k-modal-prefix-cls}-footer {
             position: absolute;
             width: 100%;
             bottom: 0;
         }
     }
-    &-no-mask{
+    &-no-mask {
         pointer-events: none;
     }
 }
 
 @media (max-width: @screen-sm) {
-    .@{modal-prefix-cls} {
+    .@{k-modal-prefix-cls} {
         width: auto !important;
         margin: 10px;
     }
-    .@{modal-prefix-cls}-fullscreen{
+
+    .@{k-modal-prefix-cls}-fullscreen {
         width: 100% !important;
         margin: 0;
     }
+
     .vertical-center-modal {
-        .@{modal-prefix-cls} {
+        .@{k-modal-prefix-cls} {
             flex: 1;
         }
     }
 }
 
-.@{confirm-prefix-cls} {
+.@{k-confirm-prefix-cls} {
     padding: 0 4px;
     &-head {
         padding: 0 12px 0 0;
@@ -180,19 +198,19 @@
         }
     }
 
-    &-body{
+    &-body {
         padding-left: 42px;
         font-size: @font-size-base;
         color: @text-color;
         position: relative;
 
-        &-render{
+        &-render {
             margin: 0;
             padding: 0;
         }
     }
 
-    &-footer{
+    &-footer {
         margin-top: 20px;
         text-align: right;
 

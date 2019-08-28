@@ -1,5 +1,5 @@
 <template>
-    <div v-transfer-dom :data-transfer="transfer" :style="wrapStyles">
+    <div v-transfer-dom :data-transfer="transfer" :style="{zIndex:zIndex,position:'relative'}">
         <transition name="fade" v-if="noMask">
             <div :class="maskClasses" v-show="visible" @click="mask"></div>
         </transition>
@@ -47,8 +47,8 @@
         </div>
         <k-modal
             v-model="showExitModal"
-            @cancel="cancelModal"
-            @ok="submitModal"
+            @on-cancel="cancelModal"
+            @on-ok="submitModal"
             :title="this.t('i.sideView.confirm.title')"
             :content="this.t('i.sideView.confirm.content')"
             :ok-text="this.t('i.sideView.confirm.buttonLeave')"
@@ -66,7 +66,6 @@
     import Locale from '../../mixins/locale';
     import Emitter from '../../mixins/emitter';
     import {findComponentUpward} from '../../utils/assist';
-    import {transferIncrease as modalIncrease } from '../../utils/index-queue';
 
     const iDropDownMenu = iDropDown.Menu;
     const iDropDownItem = iDropDown.Item;
@@ -165,11 +164,7 @@
             src: {
                 type: String,
                 default: null
-            },
-            zIndex: {
-                type: Number,
-                default: 1000
-            },
+            }
         },
         data () {
             return {
@@ -182,16 +177,9 @@
                 showContent: false,
                 showSpin: false,
                 showExitModal: false,
-                modalIndex: this.handleGetModalIndex(),  // for Esc close the top modal
             };
         },
         computed: {
-            wrapStyles () {
-                return {
-                    zIndex: window.sysZIndex + this.zIndex,
-                    position:'relative'
-                };
-            },
             maskClasses () {
                 return `${prefixCls}-mask`;
             },
@@ -200,6 +188,12 @@
                     [`${prefixCls}--actived`]: this.visible,
                     [`${prefixCls}--has-iframe`]: this.src
                 }];
+            },
+            zIndex () {
+                if (this.parentSideView) {
+                    return this.parentSideView.zIndex + 1;
+                }
+                return 900;
             },
             mainStyles () {
 
@@ -228,10 +222,6 @@
             }
         },
         methods: {
-            handleGetModalIndex () {
-                modalIncrease();
-                return window.sysZIndex;
-            },
             cancelModal () {
                 this.showExitModal = false;
             },

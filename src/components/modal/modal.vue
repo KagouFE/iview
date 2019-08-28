@@ -23,19 +23,44 @@
                         <div :class="[prefixCls + '-body']">
                             <slot></slot>
                         </div>
-                        <div :class="[prefixCls + '-footer']" v-if="!footerHide">
+                        <!--    add by lan -->
+                        <div :class="footerClasses" v-if="!footerHide">
                             <slot name="footer">
-                                <i-button type="text" size="large" @click.native="cancel">{{ localeCancelText }}
+                                <span v-if="buttonAlign === 'right'">
+                                        <i-button  :size="buttonSize"
+                                                  @click.native="cancel">{{ localeCancelText }}
                                 </i-button>
-                                <i-button type="primary" size="large" :loading="buttonLoading" @click.native="ok">
+                                <i-button type="primary" :size="buttonSize" :loading="buttonLoading" @click.native="ok">
                                     {{ localeOkText }}
                                 </i-button>
+                              </span>
+                                <span v-else-if="buttonAlign === 'left'">
+                                       <i-button type="primary" :size="buttonSize" :loading="buttonLoading"
+                                                 @click.native="ok">
+                                    {{ localeOkText }}
+                                </i-button>
+                                           <i-button  :size="buttonSize"
+                                                     @click.native="cancel">{{ localeCancelText
+                                               }}
+                                </i-button>
+                                </span>
                             </slot>
                         </div>
+                        <!-- add by lan-->
                     </div>
                 </div>
             </transition>
         </div>
+        <k-modal
+            v-model="showExitModal"
+            @on-cancel="cancelModal"
+            @on-ok="submitModal"
+            :title="this.t('i.sideView.confirm.title')"
+            :content="this.t('i.sideView.confirm.content')"
+            :ok-text="this.t('i.sideView.confirm.buttonLeave')"
+            :cancel-text="this.t('i.sideView.confirm.buttonStay')"
+        >
+        </k-modal>
     </div>
 </template>
 <script>
@@ -49,7 +74,7 @@
     import {on, off} from '../../utils/dom';
     import {findComponentsDownward} from '../../utils/assist';
 
-    import {transferIncrease as modalIncrease} from '../../utils/index-queue';
+    import {transferIndex as modalIndex, transferIncrease as modalIncrease} from '../../utils/transfer-queue';
 
     const prefixCls = 'ivu-modal';
 
@@ -131,10 +156,21 @@
                 type: Number,
                 default: 1000
             },
-            maskCallBack: {
-                type: Boolean,
-                default: false
-            }
+            // add by lan
+            beforeClose: {
+                type: Function,
+                default: function (next) {
+                    next();
+                }
+            },
+            buttonAlign: {
+                type: String,
+                default: 'right'
+            },
+            buttonSize: {
+                type: String,
+                default: 'large'
+            },
         },
         data () {
             return {
@@ -151,9 +187,20 @@
                     dragging: false
                 },
                 modalIndex: this.handleGetModalIndex(),  // for Esc close the top modal
+                showExitModal: false
             };
         },
         computed: {
+            // add by lan
+            footerClasses () {
+                return [
+                    `${prefixCls}-footer`,
+                    {
+                        [`${prefixCls}-footer-align-left`]: this.buttonAlign === 'left',
+                    }
+                ];
+            },
+            // add by lan
             wrapClasses () {
                 return [
                     `${prefixCls}-wrap`,
@@ -166,7 +213,7 @@
             },
             wrapStyles () {
                 return {
-                    zIndex: window.sysZIndex + this.zIndex // update by lan     globe zIndex
+                    zIndex: this.modalIndex + this.zIndex
                 };
             },
             maskClasses () {
@@ -243,18 +290,26 @@
             }
         },
         methods: {
-            close () {
-                const next = () => {
-                    this.visible = false;
-                    this.$emit('input', false);
-                    this.$emit('on-cancel');
-                }
-                if (this.maskCallBack) {
-                    this.$emit('mask-esc-close', next);
-                } else {
-                    next();
-                }
+            // add by lan
+            closeConfirm () {
+                this.showExitModal = true;
             },
+            closeHandler () {
+                this.showExitModal = false;
+                this.visible = false;
+                this.$emit('input', false);
+                this.$emit('on-cancel');
+            },
+            close () {
+                this.beforeClose(this.closeHandler, () => this.closeConfirm());
+            },
+            cancelModal () {
+                this.showExitModal = false;
+            },
+            submitModal () {
+                this.closeHandler();
+            },
+            // add by lan
             handleMask () {
                 if (this.maskClosable && this.showMask) {
                     this.close();
@@ -342,7 +397,7 @@
             },
             handleGetModalIndex () {
                 modalIncrease();
-                return window.sysZIndex;
+                return modalIndex;
             },
             handleClickModal () {
                 if (this.draggable) {

@@ -12,8 +12,8 @@
         </span>
         <k-modal
             v-model="showModal"
-            @cancel="cancel"
-            @ok="ok"
+            @on-cancel="cancel"
+            @on-ok="ok"
             :title="title"
             :content="content"
             :ok-text="okText"
