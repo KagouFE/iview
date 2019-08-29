@@ -35,6 +35,7 @@
                     :values="values"
                     :clearable="canBeCleared"
                     :prefix="prefix"
+                    :suffix="suffix"
                     :disabled="disabled"
                     :disabledHighlight="disabledHighlight"
                     :remote="remote"
@@ -51,6 +52,7 @@
                     @on-clear="clearSingleSelect"
                 >
                     <slot name="prefix" slot="prefix"></slot>
+                    <slot name="suffix" slot="suffix"></slot>
                 </select-head>
             </slot>
         </div>
@@ -263,6 +265,9 @@
             },
             // 3.4.0
             prefix: {
+                type: String
+            },
+            suffix: {
                 type: String
             },
             // 3.4.0
@@ -674,7 +679,6 @@
             },
             onOptionClick(option) {
                 if (this.multiple){
-
                     // keep the query for remote select
                     if (this.remote) this.lastRemoteQuery = this.lastRemoteQuery || this.query;
                     else this.lastRemoteQuery = '';

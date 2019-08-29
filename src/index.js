@@ -63,7 +63,7 @@ import locale from './locale';
 import KSplit from './components/k-split';
 import KModal from './components/k-modal';
 import Panel from './components/panel';
-import List from './components/list';
+// import List from './components/list';
 import Editor from './components/editor';
 import TextareaFormat from './components/textarea-format';
 import MergeTable from './components/merge-table';

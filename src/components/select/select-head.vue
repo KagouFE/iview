@@ -40,6 +40,11 @@
             ref="input">
         <Icon type="ios-close-circle" :class="[prefixCls + '-arrow']" v-if="resetSelect" @click.native.stop="onClear"></Icon>
         <Icon :type="arrowType" :custom="customArrowType" :size="arrowSize" :class="[prefixCls + '-arrow']" v-if="!resetSelect && !remote"></Icon>
+        <span class="ivu-input-suffix" v-if="$slots.suffix || suffix">
+            <slot name="suffix">
+                <Icon :type="suffix" v-if="suffix" />
+            </slot>
+        </span>
     </div>
 </template>
 <script>
@@ -96,6 +101,9 @@
                 default: false
             },
             prefix: {
+                type: String
+            },
+            suffix: {
                 type: String
             },
             // 3.4.0
