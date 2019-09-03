@@ -165,8 +165,6 @@ const components = {
     KSplit,
     KModal,
     Panel,
-    List,
-    ListItem: List.Item,
     Editor,
     TextareaFormat,
     FileExport,
