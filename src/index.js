@@ -122,7 +122,6 @@ const components = {
     Sider: Sider,
     Split,
     Submenu: Menu.Sub,
-    SvgIcon: SvgIcon,
     Layout: Layout,
     List,
     ListItem: List.Item,
@@ -175,6 +174,8 @@ const components = {
     TiledSelectGroup: TiledSelect.group,
     SideView,
     KSwitch,
+    // add by wan
+    SvgIcon: SvgIcon,
 };
 
 const iview = {
