@@ -76,6 +76,9 @@ import KSwitch from './components/k-switch';
 // add by shilei
 
 import FileExport from './components/file-export';
+// add by Wan
+import SvgIcon from './components/svgIcon';
+import './icons';
 
 const components = {
     Affix,
@@ -119,6 +122,7 @@ const components = {
     Sider: Sider,
     Split,
     Submenu: Menu.Sub,
+    SvgIcon: SvgIcon,
     Layout: Layout,
     List,
     ListItem: List.Item,
@@ -194,7 +198,7 @@ const iview = {
     iTime: Time
 };
 
-const install = function(Vue, opts = {}) {
+const install = function (Vue, opts = {}) {
     if (install.installed) return;
     locale.use(opts.locale);
     locale.i18n(opts.i18n);

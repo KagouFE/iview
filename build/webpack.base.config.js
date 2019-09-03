@@ -127,7 +127,16 @@ module.exports = {
             },
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
-                loader: 'url-loader?limit=8192'
+                loader: 'url-loader?limit=8192',
+                exclude: [resolve('src/icons')],
+            },
+            {
+                test: /\.svg$/,
+                loader: 'svg-sprite-loader',
+                include: [resolve('src/icons')],
+                options: {
+                    symbolId: 'icon-[name]'
+                }
             },
             {
                 test: /\.(html|tpl)$/,
