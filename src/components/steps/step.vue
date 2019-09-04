@@ -2,12 +2,12 @@
     <div :class="wrapClasses" :style="styles">
         <div :class="[prefixCls + '-tail']"><i></i></div>
         <div :class="[prefixCls + '-head']" :style="bgStyles">
-            <div :class="[prefixCls + '-head-inner']" v-if="icon">
+            <div :class="[prefixCls + '-head-inner']" v-if="!svgIcon">
                 <span v-if="!icon && currentStatus != 'finish' && currentStatus != 'error'">{{ stepNumber }}</span>
                 <span v-else :class="iconClasses"></span>
             </div>
-            <div :class="[prefixCls + '-svg-inner']" v-if="svgIcon">
-            <svg-icon :type="svgClasses"></svg-icon>
+            <div :class="[prefixCls + '-svg-inner']" v-else>
+                <svg-icon :type="svgClasses"></svg-icon>
             </div>
         </div>
         <div :class="[prefixCls + '-main']">
@@ -44,7 +44,8 @@
                 type: String
             },
             icon: {
-                type: String
+                type: String,
+                default: null
             },
             svgIcon: {
                 type: String
