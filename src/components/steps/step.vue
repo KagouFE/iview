@@ -2,13 +2,18 @@
     <div :class="wrapClasses" :style="styles">
         <div :class="[prefixCls + '-tail']"><i></i></div>
         <div :class="[prefixCls + '-head']" :style="bgStyles">
-            <div :class="[prefixCls + '-head-inner']" >
+            <div :class="[prefixCls + '-svg-inner']" v-if="svgIcon">
+                <svg-icon :type="svgClasses"></svg-icon>
+            </div>
+            <div :class="[prefixCls + '-head-inner']" v-else>
                 <span v-if="!icon && currentStatus != 'finish' && currentStatus != 'error'">{{ stepNumber }}</span>
                 <span v-else :class="iconClasses"></span>
             </div>
         </div>
         <div :class="[prefixCls + '-main']">
-            <div :class="[prefixCls + '-title']" :style="bgStyles">{{ title }}</div>
+            <div :class="[prefixCls + '-title']" :style="bgStyles">
+                <slot name="title">{{ title }}</slot>
+            </div>
             <div v-if="content || $slots.default" :class="[prefixCls + '-content']">
                 <slot>{{ content }}</slot>
             </div>
@@ -17,14 +22,14 @@
 </template>
 <script>
     import Emitter from '../../mixins/emitter';
-    import { oneOf } from '../../utils/assist';
+    import {oneOf} from '../../utils/assist';
 
     const prefixCls = 'ivu-steps';
     const iconPrefixCls = 'ivu-icon';
 
     export default {
         name: 'Step',
-        mixins: [ Emitter ],
+        mixins: [Emitter],
         props: {
             status: {
                 validator (value) {
@@ -39,6 +44,9 @@
                 type: String
             },
             icon: {
+                type: String
+            },
+            svgIcon: {
                 type: String
             }
         },
@@ -84,16 +92,27 @@
                     }
                 ];
             },
+            svgClasses () {
+                // add by wan
+                let svg = '';
+                if (this.svgIcon) {
+                    svg = this.svgIcon;
+                    if (this.currentStatus != 'wait') {
+                        svg = this.svgIcon + '-complete';
+                    }
+                }
+                return svg;
+            },
             styles () {
                 // add by fen 用于多行展示
                 let ret = {};
-                if(this.col === null){
+                if (this.col === null) {
                     ret = {
-                        width: `${1/this.total*100}%`
+                        width: `${1 / this.total * 100}%`
                     };
-                }else {
+                } else {
                     ret = {
-                        width: `${1/this.col*100}%`
+                        width: `${1 / this.col * 100}%`
                     };
                 }
                 return ret;

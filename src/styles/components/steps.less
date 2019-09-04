@@ -11,72 +11,102 @@
     line-height: 1.5;
 
     // add by fen 用于多行展示
-    &:after{
+    &:after {
         display: block;
         content: '';
-        height:0;
-        margin-top:-24px;
+        height: 0;
+        margin-top: -24px;
     }
+
     // - end -
 
-    &-item{
+    &-item {
         display: inline-block;
         position: relative;
         vertical-align: top;
-        margin-bottom:24px;// add by fen 用于多行展示
+        margin-bottom: 24px; // add by fen 用于多行展示
 
-        &.@{steps-prefix-cls}-status-wait{
+        &.@{steps-prefix-cls}-status-wait {
             .@{steps-prefix-cls}-head-inner {
                 background-color: #fff;
+
                 > .@{steps-prefix-cls}-icon, span {
                     color: @steps-wait-icon-color;
                 }
             }
+
+            .@{steps-prefix-cls}-svg-inner {
+                //add by wan no color/bg color
+                //if you need you can add
+            }
+
             .@{steps-prefix-cls}-title {
                 color: @steps-wait-title-color;
             }
+
             .@{steps-prefix-cls}-content {
                 color: @steps-wait-description-color;
             }
+
             .@{steps-prefix-cls}-tail > i {
                 background-color: @steps-wait-tail-color;
             }
         }
+
         &.@{steps-prefix-cls}-status-process {
             .@{steps-prefix-cls}-head-inner {
                 border-color: @success-color;
                 background-color: @success-color;
+
                 > .@{steps-prefix-cls}-icon, span {
                     color: #fff;
                 }
             }
+
+            .@{steps-prefix-cls}-svg-inner {
+                //add by wan no color/bg color
+                //if you need you can add
+            }
+
             .@{steps-prefix-cls}-title {
                 color: @steps-title-color;
             }
+
             .@{steps-prefix-cls}-content {
                 color: @steps-title-color;
             }
+
             .@{steps-prefix-cls}-tail > i {
                 background-color: @border-color-split;
             }
         }
+
         &.@{steps-prefix-cls}-status-finish {
             .@{steps-prefix-cls}-head-inner {
                 background-color: #fff;
                 border-color: @success-color;
+
                 > .@{steps-prefix-cls}-icon, span {
                     color: @success-color;
                 }
             }
+
+            .@{steps-prefix-cls}-svg-inner {
+                //add by wan no color/bg color
+                //if you need you can add
+            }
+
             .@{steps-prefix-cls}-tail > i:after {
                 width: 100%;
                 background: @success-color;
                 transition: all @transition-time @ease-in-out;
                 opacity: 1;
             }
+
             .@{steps-prefix-cls}-title {
                 color: @steps-wait-title-color;
             }
+
             .@{steps-prefix-cls}-content {
                 color: @steps-wait-description-color;
             }
@@ -86,16 +116,25 @@
             .@{steps-prefix-cls}-head-inner {
                 background-color: #fff;
                 border-color: @error-color;
+
                 > .@{steps-prefix-cls}-icon {
                     color: @error-color;
                 }
             }
+
+            .@{steps-prefix-cls}-svg-inner {
+                //add by wan no color/bg color
+                //if you need you can add
+            }
+
             .@{steps-prefix-cls}-title {
                 color: @error-color;
             }
+
             .@{steps-prefix-cls}-content {
                 color: @error-color;
             }
+
             .@{steps-prefix-cls}-tail > i {
                 background-color: @border-color-split;
             }
@@ -114,6 +153,7 @@
                 border: 0;
                 width: auto;
                 height: auto;
+
                 > .@{steps-prefix-cls}-icon {
                     font-size: 20px;
                     top: 2px;
@@ -121,14 +161,34 @@
                     height: 20px;
                 }
             }
+
+            .@{steps-prefix-cls}-svg-inner {
+                background: none;
+                border: 0;
+                width: auto;
+                height: auto;
+
+                > .svg-icon {
+                    top: 2px;
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
             &.@{steps-prefix-cls}-status-process {
                 .@{steps-prefix-cls}-head-inner > .@{steps-prefix-cls}-icon {
                     color: @success-color;
                 }
+
+                .@{steps-prefix-cls}-svg-inner > .svg-icon {
+                    //add by wan no color/bg color
+                    //if you need you can add
+                }
             }
         }
     }
-    &-item:last-child &-tail{
+
+    &-item:last-child &-tail {
         display: none;
     }
 
@@ -138,6 +198,7 @@
         display: inline-block;
         vertical-align: top;
     }
+
     .@{steps-prefix-cls}-head {
         background: #fff;
     }
@@ -160,6 +221,7 @@
 
             &.ivu-icon {
                 font-size: 24px;
+
                 &-ios-checkmark-empty,
                 &-ios-close-empty {
                     font-weight: bold;
@@ -167,11 +229,32 @@
             }
         }
     }
+
+    .@{steps-prefix-cls}-svg-inner {
+        //add by wan
+        display: block;
+        line-height: 24px;
+        margin-top: -5px;//to fix position
+        margin-right: 8px;
+        text-align: center;
+        font-size: 14px;
+        transition: background-color @transition-time @ease-in-out;
+
+        > .svg-icon {
+            line-height: 1;
+            position: relative;
+            height: 35px;
+            width: 35px;
+
+        }
+    }
+
     .@{steps-prefix-cls}-main {
         margin-top: 2.5px;
         display: inline;
     }
-    .@{steps-prefix-cls}-custom .@{steps-prefix-cls}-title{
+
+    .@{steps-prefix-cls}-custom .@{steps-prefix-cls}-title {
         margin-top: 2.5px;
     }
 
@@ -188,22 +271,26 @@
             color: #666;
         }
     }
+
     .@{steps-prefix-cls}-item-last {
         .@{steps-prefix-cls}-title {
             padding-right: 0;
             width: 100%;
         }
     }
+
     .@{steps-prefix-cls}-content {
         font-size: 12px;
         color: #999;
     }
+
     .@{steps-prefix-cls}-tail {
         width: 100%;
         padding: 0 10px;
         position: absolute;
         left: 0;
         top: 13px;
+
         > i {
             display: inline-block;
             width: 100%;
@@ -212,6 +299,7 @@
             background: @border-color-split;
             border-radius: 1px;
             position: relative;
+
             &:after {
                 content: '';
                 width: 0;
@@ -238,35 +326,54 @@
                 font-size: 16px;
                 top: 0;
             }
-
-
         }
+
+        .@{steps-prefix-cls}-svg-inner {
+            //add by wan
+            width: 25px;
+            height: 25px;
+            padding-top: 1px;
+            line-height: 16px;
+            margin-right: 10px;
+            text-align: center;
+            font-size: 12px;
+
+            > .svg-icon {
+                width: 25px;
+                height: 25px;
+            }
+        }
+
         // add by fen 用于多行展示
         &:after {
-            margin-top:-16px;
+            margin-top: -16px;
         }
-        .@{steps-prefix-cls}-item{
-            margin-bottom:16px;
+
+        .@{steps-prefix-cls}-item {
+            margin-bottom: 16px;
         }
+
         // ----
         .@{steps-prefix-cls}-main {
             margin-top: 0;
         }
+
         .@{steps-prefix-cls}-title {
             margin-bottom: 4px;
             margin-top: 0;
-            color: #666;
             font-size: 12px;
             font-weight: bold;
         }
+
         .@{steps-prefix-cls}-content {
             font-size: 12px;
-            color: #999;
             padding-left: 30px;
         }
+
         .@{steps-prefix-cls}-tail {
             top: 8px;
             padding: 0 8px;
+
             > i {
                 height: 1px;
                 width: 100%;
@@ -275,8 +382,8 @@
         }
     }
 
-    &.@{steps-prefix-cls}-small .@{steps-prefix-cls}-item.@{steps-prefix-cls}-custom .@{steps-prefix-cls}-head-inner,
-    .@{steps-prefix-cls}-item.@{steps-prefix-cls}-custom .@{steps-prefix-cls}-head-inner {
+    &.@{steps-prefix-cls}-small .@{steps-prefix-cls}-item.@{steps-prefix-cls}-custom .@{steps-prefix-cls}-head-inner.@{steps-prefix-cls}-svg-inner,
+    .@{steps-prefix-cls}-item.@{steps-prefix-cls}-custom .@{steps-prefix-cls}-head-inner.@{steps-prefix-cls}-svg-inner {
         width: inherit;
         height: inherit;
         line-height: inherit;
@@ -298,9 +405,11 @@
         height: 100%;
         width: 1px;
         padding: 30px 0 4px 0;
+
         > i {
             height: 100%;
             width: 1px;
+
             &:after {
                 height: 0;
                 width: 100%;
@@ -316,6 +425,7 @@
 
     .@{steps-prefix-cls}-head {
         float: left;
+
         &-inner {
             margin-right: 16px;
         }
@@ -325,9 +435,11 @@
         min-height: 47px;
         overflow: hidden;
         display: block;
+
         .@{steps-prefix-cls}-title {
             line-height: 26px;
         }
+
         .@{steps-prefix-cls}-content {
             padding-bottom: 12px;
             padding-left: 0;
@@ -337,6 +449,7 @@
     .@{steps-prefix-cls}-custom .@{steps-prefix-cls}-icon {
         left: 4px;
     }
+
     &.@{steps-prefix-cls}-small .@{steps-prefix-cls}-custom .@{steps-prefix-cls}-icon {
         left: 0;
     }
@@ -348,6 +461,7 @@
         left: 9px;
         top: 0;
         padding: 22px 0 4px 0;
+
         > i {
             height: 100%;
         }
@@ -362,10 +476,12 @@
     &.@{steps-prefix-cls}-hidden {
         visibility: hidden;
     }
+
     .@{steps-prefix-cls}-content {
         //max-width: 100px;
-        padding-left: 35px;
+        padding-left: 36px;
     }
+
     .@{steps-prefix-cls}-item:not(:first-child) .@{steps-prefix-cls}-head {
         padding-left: 10px;
         margin-left: -10px;

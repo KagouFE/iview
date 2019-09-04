@@ -1,30 +1,62 @@
 <template>
 <Panel>
     <Steps :current="index">
-        <!--<Step title="开始"></Step>-->
+        <Step title="开始"></Step>
         <Step v-for="(item,index) in activitiList" :title="item.approveUserName" :key="index" :content="item.startTime"></Step>
-        <!--<Step title="结束"></Step>-->
+        <Step title="结束"></Step>
     </Steps>
     <Button @click="change">change</Button>
     <br><br><br><br>
     <KSplit size="large"/>
-    <Steps :current="1" size="small" :col="5" >
-        <Step title="已完成" ><Button type="primary" size="small">232</Button></Step>
+    <Steps :current="1" size="small" >
+        <Step title="起运港" svgIcon="md-warehouse-circle"><Button type="primary" size="small">232</Button></Step>
+        <Step title="por" content="这里是该步骤的描述信息" svgIcon="md-dock-circle"></Step>
+        <Step title="pol" svgIcon="md-dock-circle"><Button type="primary" size="small">232</Button></Step>
+        <Step title="pod" content="这里是该步骤的描述信息" svgIcon="md-dock-circle"></Step>
+        <Step title="des" content="这里是该步骤的描述信息" svgIcon="md-dock-circle"></Step>
+        <Step title="目的地" content="这里是该步骤的描述信息" svgIcon="md-warehouse-circle"></Step>
+    </Steps>
+    <br><br><br><br>
+    <Steps :current="1" >
+        <Step svgIcon="md-warehouse-circle">
+        <div slot="title">ajsaksjlk<br>asjhahsakj</div>
+            <Button type="primary" size="small">232</Button>
+        </Step>
+        <Step title="por" content="这里是该步骤的描述信息" svgIcon="md-dock-circle">这里是该步骤的描述信息<br><Button type="primary" size="small">232</Button></Step>
+        <Step title="pol" svgIcon="md-dock-circle"><Button type="primary" size="small">232</Button></Step>
+        <Step title="pod" content="这里是该步骤的描述信息" svgIcon="md-dock-circle"></Step>
+        <Step title="des" content="这里是该步骤的描述信息" svgIcon="md-dock-circle"></Step>
+        <Step title="目的地" content="这里是该步骤的描述信息" svgIcon="md-warehouse-circle"></Step>
+    </Steps>
+    <br><br><br><br>
+    <Steps :current="1" size="small" >
+        <Step title="123" svgIcon="md-warehouse-circle"></Step>
         <Step title="进行中" content="这里是该步骤的描述信息"></Step>
         <Step title="待进行" ><Button type="primary" size="small">232</Button></Step>
-        <Step title="待进行" content="这里是该步骤的描述信息"></Step>
+        <Step title="待进行" content="这里是该步骤的描述信息" svgIcon="md-warehouse-circle"></Step>
         <Step title="待进行" content="这里是该步骤的描述信息"></Step>
         <Step title="待进行" content="这里是该步骤的描述信息"></Step>
         <Step title="待进行" content="这里是该步骤的描述信息"></Step>
         <Step title="待进行" content="这里是该步骤的描述信息"></Step>
     </Steps>
+    <Icon type="md-step-truck"></Icon>
+    <svg-icon type="md-pod" size="40" ></svg-icon>
+    <svg-icon type="md-warehouse-circle"  :className="icon"></svg-icon>
+    <svg-icon type="md-arrival" size="40" ></svg-icon>
+    <svg-icon type="md-warehouse-circle-complete" size="40" ></svg-icon>
+    <svg-icon type="md-financing" size="40" ></svg-icon>
+    <svg-icon type="md-exportAgency" size="40" ></svg-icon>
+    <svg-icon type="md-exportAgency" size="40" ></svg-icon>
+    <svg-icon type="md-seaport" size="40" ></svg-icon>
+    <svg-icon type="md-dock-circle-complete" size="40" ></svg-icon>
+    <svg-icon type="md-dock-circle" size="40" ></svg-icon>
     <KSplit size="large"/>
     <Steps :current="1" :col="5" >
         <Step title="已完成">
             2018-12-23
             <Button type="primary" size="small">232</Button>
         </Step>
-        <Step title="进行中" content="2018-12-23"></Step>
+        <Step title="进行中" content="2018-12-23" svgIcon="md-warehouse-circle"></Step>
         <Step title="待进行" content="2018-12-23"></Step>
         <Step title="待进行" content="2018-12-23"></Step>
         <Step title="待进行" content="2018-12-23"></Step>
@@ -163,3 +195,10 @@
         }
     }
 </script>
+<style scoped>
+    .icon{
+        height: 100px;
+        width: 100px;
+        color: red;
+    }
+</style>
