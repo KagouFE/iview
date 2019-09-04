@@ -175,7 +175,7 @@ const components = {
     SideView,
     KSwitch,
     // add by wan
-    SvgIcon: SvgIcon,
+    SvgIcon,
 };
 
 const iview = {
