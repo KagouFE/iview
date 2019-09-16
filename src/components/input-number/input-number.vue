@@ -139,6 +139,10 @@
                 type: Boolean,
                 default: false
             },
+            showHandler: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
             return {
