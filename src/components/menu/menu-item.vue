@@ -8,7 +8,7 @@
         @click.ctrl="handleClickItem($event, true)"
         @click.meta="handleClickItem($event, true)"
         :style="itemStyle"><slot></slot></a>
-    <li v-else :class="classes" @click.stop="handleClickItem" :style="itemStyle"><slot></slot></li>
+    <li v-else :class="classes" @click="handleClickItem" :style="itemStyle"><slot></slot></li>
 </template>
 <script>
     import Emitter from '../../mixins/emitter';
@@ -55,6 +55,7 @@
         },
         methods: {
             handleClickItem (event, new_window = false) {
+
                 if (this.disabled) return;
 
                 if (new_window || this.target === '_blank') {
