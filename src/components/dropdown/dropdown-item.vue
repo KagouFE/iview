@@ -8,7 +8,7 @@
         name: 'DropdownItem',
         props: {
             name: {
-                type: [String, Number,Object]
+                type: [String, Number]
             },
             disabled: {
                 type: Boolean,
