@@ -7,7 +7,7 @@
             <div :class="[prefixCls + '-header']">
                 <slot name="header">
                     <a :class="[prefixCls + '-close']" @click="close">
-                        <Icon type="ios-close-empty"></Icon>
+                        <Icon type="ios-close"  size="36"/>
                     </a>
                     <slot name="headerLeft">
                         <h2 :class="[prefixCls + '-title']">
@@ -277,8 +277,8 @@
 //                });
             },
             show () {
+                this.setVisible();
                 const next = () => {
-                    this.setVisible();
                     this.showSpin = true;
                     this.timer = setTimeout(() => {
                         if (this.viewLoading === null) {

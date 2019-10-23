@@ -1,18 +1,32 @@
 <template>
     <div :class="classes" v-if="visible">
-        <div class="panel__header clearfix" v-if="title || $slots.header">
-            <slot name="header"></slot>
-            <div class="panel__title" v-if="title">{{title}}</div>
-            <div class="panel__fn" v-if="$slots.fn || showToggle">
-                <slot name="fn" v-if="$slots.fn">></slot>
-                <Button v-if="showToggle" type="text" size="small" @click="handleToggle">
-                    <Icon :type="iosArrowType"/>
-                </Button>
+        <template v-if="showToggle">
+            <div class="panel__header clearfix cursor" v-if="title || $slots.header" @click="handleToggle">
+                <slot name="header"></slot>
+                <div class="panel__title" v-if="title">{{title}}</div>
+                <slot name="title_suf"></slot>
+                <div class="panel__fn" v-if="$slots.fn || showToggle">
+                    <slot name="fn" v-if="$slots.fn">></slot>
+                    <Button v-if="showToggle" type="text" size="small">
+                        <Icon :type="iosArrowType"/>
+                    </Button>
+                </div>
             </div>
-        </div>
-        <div class="panel__body" v-if="showToggle">
-            <slot name="preBody"></slot>
-        </div>
+            <k-split small transparent></k-split>
+            <div class="panel__body cursor" v-if="$slots.preBody" @click="handleToggle">
+                <slot name="preBody"></slot>
+            </div>
+        </template>
+        <template v-else>
+            <div class="panel__header clearfix" v-if="title || $slots.header">
+                <slot name="header"></slot>
+                <div class="panel__title" v-if="title">{{title}}</div>
+                <slot name="title_suf"></slot>
+                <div class="panel__fn" v-if="$slots.fn">
+                    <slot name="fn" v-if="$slots.fn">></slot>
+                </div>
+            </div>
+        </template>
         <transition name="transition-drop"
         >
             <div class="panel__body" v-show="showBody">
@@ -28,6 +42,7 @@
 
 
 <script>
+
     const prefixCls = 'panel';
     export default {
         name: 'panel',

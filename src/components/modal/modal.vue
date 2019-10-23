@@ -27,8 +27,12 @@
                         <div :class="footerClasses" v-if="!footerHide">
                             <slot name="footer">
                                 <span v-if="buttonAlign === 'right'">
-                                        <i-button  :size="buttonSize"
-                                                  @click.native="cancel">{{ localeCancelText }}
+                                  <i-button :size="buttonSize"
+                                            @click.native="cancel">{{ localeCancelText }}
+                                </i-button>
+                                 <i-button :size="buttonSize" v-if="showFooterMiddleButton"
+                                           :loading="middleButtonLoading"
+                                           @click.native="middleOk">{{ middleButtonText }}
                                 </i-button>
                                 <i-button type="primary" :size="buttonSize" :loading="buttonLoading" @click.native="ok">
                                     {{ localeOkText }}
@@ -39,7 +43,11 @@
                                                  @click.native="ok">
                                     {{ localeOkText }}
                                 </i-button>
-                                           <i-button  :size="buttonSize"
+                                         <i-button :size="buttonSize" v-if="showFooterMiddleButton"
+                                                   :loading="middleButtonLoading"
+                                                   @click.native="middleOk">{{ middleButtonText }}
+                                </i-button>
+                                           <i-button :size="buttonSize"
                                                      @click.native="cancel">{{ localeCancelText
                                                }}
                                 </i-button>
@@ -173,6 +181,13 @@
                 type: String,
                 default: 'large'
             },
+            showFooterMiddleButton: {
+                type: Boolean,
+                default: false
+            },
+            middleButtonText: {
+                type: String
+            },
         },
         data () {
             return {
@@ -180,6 +195,7 @@
                 wrapShow: false,
                 showHead: true,
                 buttonLoading: false,
+                middleButtonLoading: false,
                 visible: this.value,
                 dragData: {
                     x: null,
@@ -342,6 +358,15 @@
                 }
                 this.$emit('on-ok');
             },
+            middleOk () {
+                if (this.loading) {
+                    this.middleButtonLoading = true;
+                } else {
+                    this.visible = false;
+                    this.$emit('input', false);
+                }
+                this.$emit('on-middle-ok');
+            },
             EscClose (e) {
                 if (this.visible && this.closable) {
                     if (e.keyCode === 27) {
@@ -442,6 +467,7 @@
             visible (val) {
                 if (val === false) {
                     this.buttonLoading = false;
+                    this.middleButtonLoading = false;
                     this.timer = setTimeout(() => {
                         this.wrapShow = false;
                         this.removeScrollEffect();
@@ -462,6 +488,7 @@
             loading (val) {
                 if (!val) {
                     this.buttonLoading = false;
+                    this.middleButtonLoading = false;
                 }
             },
             scrollable (val) {
