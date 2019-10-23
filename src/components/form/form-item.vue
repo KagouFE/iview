@@ -161,7 +161,25 @@
             }
         },
         methods: {
-            setRules() {
+            /**
+             * add by wan 解决全局改变不刷新rules
+             * */
+            setRulesNoEvent () {
+                let rules = this.getRules();
+                if (rules.length && this.required) {
+                    return;
+                } else if (rules.length) {
+                    rules.every((rule) => {
+                        this.isRequired = rule.required;
+                    });
+                } else if (this.required) {
+                    this.isRequired = this.required;
+                }
+            },
+            /**
+             * -----------------------------------
+             * */
+            setRules () {
                 let rules = this.getRules();
                 if (rules.length&&this.required) {
                     return;

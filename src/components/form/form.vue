@@ -103,11 +103,23 @@
                 if (!field) { throw new Error('[iView warn]: must call validateField with valid prop string!'); }
 
                 field.validate('', cb);
+            },
+            /**
+             * add by wan 取消rule改变触发表单验证，并刷新formItem Label的*展示
+             * */
+            setFormItemRules () {
+                this.fields.forEach(field => {
+                    field.setRulesNoEvent();
+                });
             }
+            /**
+             * -----------------------------------
+             * */
         },
         watch: {
-            rules() {
-                this.validate();
+            rules () {
+                // this.validate(); //change by wan
+                this.setFormItemRules();//add by wan
             }
         },
         created () {
