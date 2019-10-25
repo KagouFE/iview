@@ -81,6 +81,7 @@ nav {
                 <li><router-link to="/time">Time</router-link></li>
                 <li><router-link to="/cell">Cell</router-link></li>
                 <li><router-link to="/drawer">Drawer</router-link></li>
+                <li><router-link to="/k-switch">kSwitch</router-link></li>
             </ul>
         </nav>
         <router-view></router-view>

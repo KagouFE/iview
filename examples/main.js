@@ -261,6 +261,10 @@ const router = new VueRouter({
         {
             path: '/form-compact',
             component: (resolve) => require(['./routers/form-compact.vue'], resolve)
+        },
+        {
+            path: '/k-switch',
+            component: (resolve) => require(['./routers/k-switch.vue'], resolve)
         }
     ]
 });
