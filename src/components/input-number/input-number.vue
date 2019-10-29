@@ -44,14 +44,12 @@
         let sq1, sq2, m;
         try {
             sq1 = num1.toString().split('.')[1].length;
-        }
-        catch (e) {
+        } catch (e) {
             sq1 = 0;
         }
         try {
             sq2 = num2.toString().split('.')[1].length;
-        }
-        catch (e) {
+        } catch (e) {
             sq2 = 0;
         }
 //        if (sq1 === 0 || sq2 === 0) {
@@ -149,7 +147,8 @@
                 focused: false,
                 upDisabled: false,
                 downDisabled: false,
-                currentValue: this.value
+                currentValue: this.value,
+                init: false,// add by wan
             };
         },
         computed: {
@@ -213,11 +212,14 @@
                 return this.precision ? this.currentValue.toFixed(this.precision) : this.currentValue;
             },
             formatterValue () {
+                let currValue = null;
                 if (this.formatter && this.precisionValue !== null) {
-                    return this.formatter(this.precisionValue);
+                    currValue = this.formatter(this.precisionValue);
                 } else {
-                    return this.precisionValue;
+                    currValue = this.precisionValue;
                 }
+                this.otherChange(currValue); //add by wan
+                return currValue;
             }
         },
         methods: {
@@ -238,6 +240,23 @@
                 }
                 this.changeStep('down', e);
             },
+            /**
+             * add by wan 解决当数据由外部改变时不会触发校验
+             * */
+            otherChange (currValue) {
+                if (this.init) {
+                    this.$nextTick(() => {
+                        this.currentValue = currValue;
+                        this.$emit('input', currValue);
+                        this.$emit('on-change', currValue);
+                        this.dispatch('FormItem', 'on-form-change', currValue);
+                    });
+                }
+                this.init = true;
+            },
+            /**
+             * --------------------------------------------
+             * */
             changeStep (type, e) {
                 if (this.disabled || this.readonly) {
                     return false;

@@ -504,10 +504,10 @@
 
 <template>
     <Form ref="formValidate" :model="formValidate" :rules="ruleInfo" :label-width="80" nonReplacement>
-        <FormItem label="Name" prop="name" v-if="type1===0" >
+        <FormItem label="Name" prop="name" v-if="type1===0">
             <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
         </FormItem>
-        <FormItem label="E-mail" prop="mail" >
+        <FormItem label="E-mail" prop="mail">
             <Input v-model="formValidate.mail" placeholder="Enter your e-mail"></Input>
         </FormItem>
         <FormItem label="City" prop="city">
@@ -550,15 +550,27 @@
             <Input v-model="formValidate.desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
                    placeholder="Enter something..."></Input>
         </FormItem>
+        {{formValidate.num}}
+        <span v-for="(item,index) in formValidate.num">
+            <FormItem label="Num" :prop="'num.'+index+'.name'"
+                      :rules="[{required: true, type: 'number', message: 'Please select Number', trigger: 'blur,change'}]">
+            <input-number :min="0" :max="999999999" v-model="item.name"></input-number>
+        </FormItem>
+        </span>
+        {{formValidate.num1}}
+        <span v-for="(item,index) in formValidate.num1">
+            <FormItem label="Num55555" :prop="'num1.'+index+'.name'"
+                      :rules="[{required: true, type: 'number', message: 'Please select Number', trigger: 'blur,change'}]">
+            <input-number :min="0" :max="999999999" v-model="item.name"></input-number>
+        </FormItem>
+        </span>
         <FormItem>
             <Button type="primary" @click="handleChange1()">Change1</Button>
             <Button type="primary" @click="handleChange2()">Change2</Button>
-            <Button type="primary" @click="handleChange3()">Change3</Button>
+            <Button type="primary" @click="handleChange3()">copy</Button>
             <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
             <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
         </FormItem>
-        11111:{{changeddd}}<br>
-        2222:{{ruleInfo}}
     </Form>
 </template>
 <script>
@@ -573,12 +585,21 @@
                     interest: [],
                     date: '',
                     time: '',
-                    desc: ''
+                    desc: '',
+                    num: [
+                        {name: null},
+                        {name: null}
+                    ],
+                    num1: [
+                        {name: null},
+                        {name: null}
+                    ],
                 },
                 type1: 1,
                 changeddd: false,
                 type2: 0,
                 type3: 1,
+                type4: false,
             }
         },
         computed: {
@@ -616,7 +637,10 @@
                     desc: [
                         {required: true, message: 'Please enter a personal introduction', trigger: 'blur'},
                         {type: 'string', min: 20, message: 'Introduce no less than 20 words', trigger: 'blur'}
-                    ]
+                    ],
+                    // num: [
+                    //     {required: true, type: 'number', message: 'Please select Number', trigger: 'blur,change'}
+                    // ],
                 }
             }
         },
@@ -632,6 +656,13 @@
             handleChange3 () {
                 this.type3 = 0
                 this.changeddd = true;
+                this.formValidate.num1.forEach((item, index) => {
+                    this.formValidate.num.find((n, i) => {
+                        if (index === i) {
+                            item.name = n.name
+                        }
+                    })
+                })
             },
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
