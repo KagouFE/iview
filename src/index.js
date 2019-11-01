@@ -61,7 +61,7 @@ import locale from './locale';
 // add by FEN
 import KSplit from './components/k-split';
 import KModal from './components/k-modal';
-import Panel from './components/panel';
+import KPanel from './components/k-panel';
 import List from './components/list';
 import Editor from './components/editor';
 import TextareaFormat from './components/textarea-format';
@@ -156,7 +156,7 @@ const components = {
     // add by FEN
     KSplit,
     KModal,
-    Panel,
+    KPanel,
     List,
     ListItem: List.Item,
     Editor,

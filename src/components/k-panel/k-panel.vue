@@ -30,7 +30,7 @@
 <script>
     const prefixCls = 'panel';
     export default {
-        name: 'panel',
+        name: 'k-panel',
         data () {
             return {
                 visible: true,
