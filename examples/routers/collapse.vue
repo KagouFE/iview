@@ -1,7 +1,7 @@
 <template>
     <div>
         <Collapse accordion v-model="value3" simple>
-            <Panel name="1" hide-arrow>
+            <i-panel name="1" hide-arrow>
                 史蒂夫·乔布斯
                 <div slot="content">
                 史蒂夫·乔布斯（Steve Jobs），1955年2月24日生于美国加利福尼亚州旧金山，美国发明家、企业家、美国苹果公司联合创办人。
@@ -16,7 +16,7 @@
                 </Panel>
             </Collapse>
             </div>
-            </Panel>
+            </i-panel>
             <Panel name="2">
                 斯蒂夫·盖瑞·沃兹尼亚克
                 <p slot="content">斯蒂夫·盖瑞·沃兹尼亚克（Stephen Gary Wozniak），美国电脑工程师，曾与史蒂夫·乔布斯合伙创立苹果电脑（今之苹果公司）。斯蒂夫·盖瑞·沃兹尼亚克曾就读于美国科罗拉多大学，后转学入美国著名高等学府加州大学伯克利分校（UC Berkeley）并获得电机工程及计算机（EECS）本科学位（1987年）。</p>
