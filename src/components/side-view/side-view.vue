@@ -44,17 +44,17 @@
                 <slot name="footer"></slot>
             </div>
             <iSpin size="large" fix v-if="showSpin"></iSpin>
+            <k-modal
+                v-model="showExitModal"
+                @on-cancel="cancelModal"
+                @on-ok="submitModal"
+                :title="this.t('i.sideView.confirm.title')"
+                :content="this.t('i.sideView.confirm.content')"
+                :ok-text="this.t('i.sideView.confirm.buttonLeave')"
+                :cancel-text="this.t('i.sideView.confirm.buttonStay')"
+            >
+            </k-modal>
         </div>
-        <k-modal
-            v-model="showExitModal"
-            @on-cancel="cancelModal"
-            @on-ok="submitModal"
-            :title="this.t('i.sideView.confirm.title')"
-            :content="this.t('i.sideView.confirm.content')"
-            :ok-text="this.t('i.sideView.confirm.buttonLeave')"
-            :cancel-text="this.t('i.sideView.confirm.buttonStay')"
-        >
-        </k-modal>
     </div>
 </template>
 <script>
@@ -277,8 +277,8 @@
 //                });
             },
             show () {
-                this.setVisible();
                 const next = () => {
+                    this.setVisible();
                     this.showSpin = true;
                     this.timer = setTimeout(() => {
                         if (this.viewLoading === null) {

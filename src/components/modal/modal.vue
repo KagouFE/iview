@@ -56,19 +56,19 @@
                         </div>
                         <!-- add by lan-->
                     </div>
+                    <k-modal
+                        v-model="showExitModal"
+                        @on-cancel="cancelModal"
+                        @on-ok="submitModal"
+                        :title="this.t('i.sideView.confirm.title')"
+                        :content="this.t('i.sideView.confirm.content')"
+                        :ok-text="this.t('i.sideView.confirm.buttonLeave')"
+                        :cancel-text="this.t('i.sideView.confirm.buttonStay')"
+                    >
+                    </k-modal>
                 </div>
             </transition>
         </div>
-        <k-modal
-            v-model="showExitModal"
-            @on-cancel="cancelModal"
-            @on-ok="submitModal"
-            :title="this.t('i.sideView.confirm.title')"
-            :content="this.t('i.sideView.confirm.content')"
-            :ok-text="this.t('i.sideView.confirm.buttonLeave')"
-            :cancel-text="this.t('i.sideView.confirm.buttonStay')"
-        >
-        </k-modal>
     </div>
 </template>
 <script>
