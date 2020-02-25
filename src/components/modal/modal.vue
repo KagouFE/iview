@@ -34,6 +34,15 @@
                                            :loading="middleButtonLoading"
                                            @click.native="middleOk">{{ middleButtonText }}
                                 </i-button>
+                                <!--  临时解决方案，todo这个之后要重构 -->
+                                    <slot name="customize">
+                                                <i-button :size="buttonSize"
+                                                          v-if="showFooterThirdButton"
+                                                          :loading="thirdButtonLoading"
+                                                          @click.native="thirdOk">{{ thirdButtonText }}
+                                                </i-button>
+                                    </slot>
+                                <!--end-->
                                 <i-button type="primary" :size="buttonSize" :loading="buttonLoading" @click.native="ok">
                                     {{ localeOkText }}
                                 </i-button>
@@ -47,9 +56,14 @@
                                                    :loading="middleButtonLoading"
                                                    @click.native="middleOk">{{ middleButtonText }}
                                 </i-button>
+                                    <slot name="customize">
+                                     <i-button :size="buttonSize" v-if="showFooterThirdButton"
+                                               :loading="thirdButtonLoading"
+                                               @click.native="thirdOk">{{ thirdButtonText }}
+                                     </i-button>
+                                    </slot>
                                            <i-button :size="buttonSize"
-                                                     @click.native="cancel">{{ localeCancelText
-                                               }}
+                                                     @click.native="cancel">{{ localeCancelText}}
                                 </i-button>
                                 </span>
                             </slot>
@@ -188,6 +202,13 @@
             middleButtonText: {
                 type: String
             },
+            showFooterThirdButton: {
+                type: Boolean,
+                default: false
+            },
+            thirdButtonText: {
+                type: String
+            },
         },
         data () {
             return {
@@ -196,6 +217,7 @@
                 showHead: true,
                 buttonLoading: false,
                 middleButtonLoading: false,
+                thirdButtonLoading: false,
                 visible: this.value,
                 dragData: {
                     x: null,
@@ -366,6 +388,15 @@
                     this.$emit('input', false);
                 }
                 this.$emit('on-middle-ok');
+            },
+            thirdOk () {
+                if (this.loading) {
+                    this.thirdButtonLoading = true;
+                } else {
+                    this.visible = false;
+                    this.$emit('input', false);
+                }
+                this.$emit('on-third-ok');
             },
             EscClose (e) {
                 if (this.visible && this.closable) {

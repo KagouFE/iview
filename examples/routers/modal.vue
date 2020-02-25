@@ -4,8 +4,11 @@
         <Modal
                 v-model="modal1"
                 title="Common Modal dialog box title"
+                third-button-text="你好啊"
+                showFooterThirdButton
                 @on-ok="ok"
-                @on-cancel="cancel">
+                @on-cancel="cancel"
+                @on-third-ok="ok">
             <p>Content of dialog</p>
             <p>Content of dialog</p>
             <p>Content of dialog</p>
@@ -16,19 +19,21 @@
             <Select v-model="model1" style="width:200px" :transfer="true">
                 <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-            <Dropdown transfer>
-                <a href="javascript:void(0)">
-                    下拉菜单
-                    <Icon type="ios-arrow-down"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem>驴打滚</DropdownItem>
-                    <DropdownItem>炸酱面</DropdownItem>
-                    <DropdownItem disabled>豆汁儿</DropdownItem>
-                    <DropdownItem>冰糖葫芦</DropdownItem>
-                    <DropdownItem divided>北京烤鸭</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+            <template slot="customize">
+                <Dropdown transfer>
+                    <a href="javascript:void(0)">
+                        下拉菜单
+                        <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                        <DropdownItem>驴打滚</DropdownItem>
+                        <DropdownItem>炸酱面</DropdownItem>
+                        <DropdownItem disabled>豆汁儿</DropdownItem>
+                        <DropdownItem>冰糖葫芦</DropdownItem>
+                        <DropdownItem divided>北京烤鸭</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </template>
             <DatePicker type="date" placeholder="Select date" style="width: 200px" transfer></DatePicker>
             <Cascader :data="data" v-model="value1" transfer></Cascader>
             <Tooltip content="Here is the prompt text" transfer>
