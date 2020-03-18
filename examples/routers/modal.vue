@@ -1,80 +1,91 @@
 <template>
     <div>
         <Button type="primary" @click="modal1 = true">Display dialog box</Button>
-        <Modal
-                v-model="modal1"
-                title="Common Modal dialog box title"
-                third-button-text="你好啊"
-                showFooterThirdButton
-                @on-ok="ok"
-                @on-cancel="cancel"
-                @on-third-ok="ok">
-            <p>Content of dialog</p>
-            <p>Content of dialog</p>
-            <p>Content of dialog</p>
-            <Button @click="openMessage">Message</Button>
-            <Select v-model="model1" style="width:200px" :transfer="false">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <Select v-model="model1" style="width:200px" :transfer="true">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-            <template slot="customize">
-                <Dropdown transfer>
-                    <a href="javascript:void(0)">
-                        下拉菜单
-                        <Icon type="ios-arrow-down"></Icon>
-                    </a>
-                    <DropdownMenu slot="list">
-                        <DropdownItem>驴打滚</DropdownItem>
-                        <DropdownItem>炸酱面</DropdownItem>
-                        <DropdownItem disabled>豆汁儿</DropdownItem>
-                        <DropdownItem>冰糖葫芦</DropdownItem>
-                        <DropdownItem divided>北京烤鸭</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </template>
-            <DatePicker type="date" placeholder="Select date" style="width: 200px" transfer></DatePicker>
-            <Cascader :data="data" v-model="value1" transfer></Cascader>
-            <Tooltip content="Here is the prompt text" transfer>
-                A balloon appears when the mouse passes over this text
-            </Tooltip>
-            <Poptip trigger="hover" title="Title" content="content" transfer>
-                <Button>Hover</Button>
-            </Poptip>
-            <Button type="primary" @click="handleSpinShow">整页显示，3秒后关闭</Button>
-        </Modal>
+        <!--<Modal-->
+                <!--v-model="modal1"-->
+                <!--title="Common Modal dialog box title"-->
+                <!--third-button-text="你好啊"-->
+                <!--showFooterThirdButton-->
+                <!--@on-ok="ok"-->
+                <!--@on-cancel="cancel"-->
+                <!--@on-third-ok="ok">-->
+            <!--<p>Content of dialog</p>-->
+            <!--<p>Content of dialog</p>-->
+            <!--<p>Content of dialog</p>-->
+            <!--<Button @click="openMessage">Message</Button>-->
+            <!--<Select v-model="model1" style="width:200px" :transfer="false">-->
+                <!--<Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+            <!--</Select>-->
+            <!--<Select v-model="model1" style="width:200px" :transfer="true">-->
+                <!--<Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+            <!--</Select>-->
+            <!--<template slot="customize">-->
+                <!--<Dropdown transfer>-->
+                    <!--<a href="javascript:void(0)">-->
+                        <!--下拉菜单-->
+                        <!--<Icon type="ios-arrow-down"></Icon>-->
+                    <!--</a>-->
+                    <!--<DropdownMenu slot="list">-->
+                        <!--<DropdownItem>驴打滚</DropdownItem>-->
+                        <!--<DropdownItem>炸酱面</DropdownItem>-->
+                        <!--<DropdownItem disabled>豆汁儿</DropdownItem>-->
+                        <!--<DropdownItem>冰糖葫芦</DropdownItem>-->
+                        <!--<DropdownItem divided>北京烤鸭</DropdownItem>-->
+                    <!--</DropdownMenu>-->
+                <!--</Dropdown>-->
+            <!--</template>-->
+            <!--<DatePicker type="date" placeholder="Select date" style="width: 200px" transfer></DatePicker>-->
+            <!--<Cascader :data="data" v-model="value1" transfer></Cascader>-->
+            <!--<Tooltip content="Here is the prompt text" transfer>-->
+                <!--A balloon appears when the mouse passes over this text-->
+            <!--</Tooltip>-->
+            <!--<Poptip trigger="hover" title="Title" content="content" transfer>-->
+                <!--<Button>Hover</Button>-->
+            <!--</Poptip>-->
+            <!--<Button type="primary" @click="handleSpinShow">整页显示，3秒后关闭</Button>-->
+        <!--</Modal>-->
         <Select v-model="model1" style="width:200px" :transfer="false">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <Select v-model="model1" style="width:200px" :transfer="true">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <SideView v-model="inShow"
-                  title="订单详情"
-                  footerHide
-                  ok-text="保存"
-                  cancel-text="取消"
-                  @on-ok="ok"
-                  :moreMenu="menu"
+        <!--<SideView v-model="inShow"-->
+                  <!--title="订单详情"-->
+                  <!--footerHide-->
+                  <!--ok-text="保存"-->
+                  <!--:beforeVisible="beforevisible"-->
+                  <!--cancel-text="取消"-->
+                  <!--@on-ok="ok"-->
+                  <!--:moreMenu="menu"-->
 
-        >
-            <FormCompact/>
-        </SideView>
+        <!--&gt;-->
+            <!--<FormCompact/>-->
+        <!--</SideView>-->
         <SideView v-model="show"
                   title="订单详情"
                   ok-text="保存"
+                  name="sa"
                   cancel-text="取消"
                   @on-ok="ok"
                   :beforeVisible="beforevisible"
-                  :afterVisible="aftervisible"
                   :beforeClose="validate"
                   :afterClose='afterclose'
                   :afterRender='afterrender'
-                  :viewLoading='loading'
         >
+            <Button @click="triggleOpenModal">open</Button>
             2313123
+            <Modal name="ma" v-model="openModal" :beforeClose="beforeClose" @on-ok="innerModalOk" @on-cancel="innerModalCancel"
+                   button-align="left" button-size="default" ok-text="保存" :loading="modalLoading" showFooterMiddleButton       @on-middle-ok="ok2"
+                   middleButtonText="保存">
+                <SideView v-model="show2"    name="sb">
+                    hfghfghfghfgh
+                    <Button @click="openKModal">openKModal</Button>
+                </SideView>
+                <Button @click="openSideView2">openSideView2</Button>
+            </Modal>
         </SideView>
+        <Button @click="openSideView">openSideView</Button>
     </div>
 </template>
 <script>
@@ -84,7 +95,8 @@
         components: {FormCompact},
         data () {
             return {
-                show: false, inShow: false, inShow1: false,
+                modalLoading: false,
+                show: false, inShow: false, inShow1: false, show2: false,
                 menu: [{
                     label: 'woqu', handler (v) {
                         console.log(111);
@@ -94,6 +106,7 @@
                         console.log(222);
                     }
                 }],
+                openModal: false,
                 loading: false,
                 modal1: false,
                 cityList: [
@@ -174,8 +187,37 @@
             }
         },
         methods: {
+            innerModalCancel () {
+            },
+            innerModalOk () {
+                this.modalLoading = true;
+            },
+            beforeClose (next, confirm) {
+                confirm();
+            },
+            openKModal () {
+                this.$KModal.confirm({
+                    title: 'i.sideView.confirm.title',
+                    content: 'i.sideView.confirm.content',
+                    okText: 'i.sideView.confirm.buttonLeave',
+                    cancelText: 'i.sideView.confirm.buttonStay',
+                    onOk: function () {
+                    }
+                });
+            },
+            triggleOpenModal () {
+                this.openModal = !this.openModal;
+            },
+            openSideView () {
+                this.show = true;
+            },
+            openSideView2 () {
+                this.show2 = true;
+            },
             ok () {
 //                this.$Message.info('Clicked ok');
+            },
+            ok2 () {
             },
             cancel () {
 //                this.$Message.info('Clicked cancel');

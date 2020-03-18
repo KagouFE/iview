@@ -7,7 +7,7 @@
             <div :class="[prefixCls + '-header']">
                 <slot name="header">
                     <a :class="[prefixCls + '-close']" @click="close">
-                        <Icon type="ios-close"  size="36"/>
+                        <Icon type="ios-close" size="36"/>
                     </a>
                     <slot name="headerLeft">
                         <h2 :class="[prefixCls + '-title']">
@@ -66,6 +66,7 @@
     import Locale from '../../mixins/locale';
     import Emitter from '../../mixins/emitter';
     import {findComponentUpward} from '../../utils/assist';
+    import {transferIndex as modalIndex, transferIncrease as modalIncrease} from '../../utils/transfer-queue';
 
     const iDropDownMenu = iDropDown.Menu;
     const iDropDownItem = iDropDown.Item;
@@ -164,6 +165,10 @@
             src: {
                 type: String,
                 default: null
+            },
+            sIndex: {
+                type: Number,
+                default: 1000
             }
         },
         data () {
@@ -177,6 +182,7 @@
                 showContent: false,
                 showSpin: false,
                 showExitModal: false,
+                sideViewIndex: this.handleGetModalIndex()
             };
         },
         computed: {
@@ -190,10 +196,7 @@
                 }];
             },
             zIndex () {
-                if (this.parentSideView) {
-                    return this.parentSideView.zIndex + 1;
-                }
-                return 900;
+                return this.sideViewIndex + this.sIndex;
             },
             mainStyles () {
 
@@ -222,6 +225,10 @@
             }
         },
         methods: {
+            handleGetModalIndex () {
+                modalIncrease();
+                return modalIndex;
+            },
             cancelModal () {
                 this.showExitModal = false;
             },
@@ -279,6 +286,7 @@
             show () {
                 const next = () => {
                     this.setVisible();
+                    this.sideViewIndex = this.handleGetModalIndex();
                     this.showSpin = true;
                     this.timer = setTimeout(() => {
                         if (this.viewLoading === null) {
