@@ -101,8 +101,8 @@ export default {
                 },
                 {
                     type: 'expand',
-                    openIcon: 'ios-arrow-up',
-                    closeIcon: 'ios-arrow-down',
+                    openIcon: 'gy-add',
+                    closeIcon: 'gy-reduce',
                     width: 150,
                     // width: 50,
                     render: (h, params) => {

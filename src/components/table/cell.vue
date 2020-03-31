@@ -90,7 +90,7 @@
             },
             expandIcon(){
                 if(!this.openIcon)return;
-                return this.expanded?this.openIcon:this.closeIcon;
+                return this.expanded?this.closeIcon:this.openIcon;
             }
         },
         methods: {
