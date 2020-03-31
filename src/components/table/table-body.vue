@@ -16,6 +16,8 @@
                     @dblclick.native.stop="dblclickCurrentRow(row._index)">
                     <td v-for="column in columns" :class="alignCls(column, row)">
                         <table-cell
+                            :openIcon="column._openIcon"
+                            :closeIcon="column.closeIcon"
                             :fixed="fixed"
                             :prefix-cls="prefixCls"
                             :row="row"

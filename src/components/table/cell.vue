@@ -15,7 +15,7 @@
         </template>
         <template v-if="renderType === 'expand' && !row._disableExpand">
             <div :class="expandCls" @click="toggleExpand">
-                <Icon type="ios-arrow-forward"></Icon>
+                <Icon :type="expandIcon||'ios-arrow-forward'"></Icon>
             </div>
         </template>
         <table-expand
@@ -44,6 +44,10 @@
         inject: ['tableRoot'],
         props: {
             prefixCls: String,
+            //add by wan
+            openIcon:String,
+            closeIcon:String,
+            //add end
             row: Object,
             column: Object,
             naturalIndex: Number,    // index of rebuildData
@@ -80,9 +84,13 @@
                 return [
                     `${this.prefixCls}-cell-expand`,
                     {
-                        [`${this.prefixCls}-cell-expand-expanded`]: this.expanded
+                        [`${this.prefixCls}-cell-expand-expanded`]: this.expanded&&!this.expandIcon //add by wan
                     }
                 ];
+            },
+            expandIcon(){
+                if(!this.openIcon)return;
+                return this.expanded?this.openIcon:this.closeIcon;
             }
         },
         methods: {

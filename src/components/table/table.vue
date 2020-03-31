@@ -422,7 +422,7 @@
                     columnWidth = parseInt(usableWidth / usableLength);
                 }
 
-                    
+
                 for (let i = 0; i < this.cloneColumns.length; i++) {
                     const column = this.cloneColumns[i];
                     let width = columnWidth + (column.minWidth?column.minWidth:0);
@@ -440,7 +440,7 @@
                             else if (column.maxWidth < width){
                                 width = column.maxWidth;
                             }
-                            
+
                             if (usableWidth>0) {
                                 usableWidth -= width - (column.minWidth?column.minWidth:0);
                                 usableLength--;
@@ -487,7 +487,7 @@
 
                     }
                 }
-                
+
                 this.tableWidth = this.cloneColumns.map(cell => cell._width).reduce((a, b) => a + b, 0) + (this.showVerticalScrollBar?this.scrollBarWidth:0) + 1;
                 this.columnsWidth = columnsWidth;
                 this.fixedHeader();
@@ -567,7 +567,7 @@
                 const status = !data._isExpanded;
                 this.objData[_index]._isExpanded = status;
                 this.$emit('on-expand', JSON.parse(JSON.stringify(this.cloneData[_index])), status);
-                
+
                 if(this.height || this.maxHeight){
                     this.$nextTick(()=>this.fixedBody());
                 }
@@ -596,7 +596,7 @@
                 }
                 this.$emit('on-selection-change', selection);
             },
-            
+
             fixedHeader () {
                 if (this.height || this.maxHeight) {
                     this.$nextTick(() => {
@@ -633,7 +633,7 @@
 
                     this.showHorizontalScrollBar = bodyEl.offsetWidth < bodyContentEl.offsetWidth + (this.showVerticalScrollBar?this.scrollBarWidth:0);
                     this.showVerticalScrollBar = this.bodyHeight? bodyHeight - (this.showHorizontalScrollBar?this.scrollBarWidth:0) < bodyContentHeight : false;
-                    
+
                     if(this.showVerticalScrollBar){
                         bodyEl.classList.add(this.prefixCls +'-overflowY');
                     }else{
@@ -644,7 +644,7 @@
                     }else{
                         bodyEl.classList.remove(this.prefixCls +'-overflowX');
                     }
-                } 
+                }
             },
 
             hideColumnFilter () {
@@ -884,6 +884,10 @@
 
                 columns.forEach((column, index) => {
                     column._index = index;
+                    //add by wan 支持展开时图标的扩展
+                    column._openIcon= column.openIcon;
+                    column._closeIcon= column.closeIcon;
+                    // add end
                     column._columnKey = columnKey++;
                     column.width = parseInt(column.width);
                     column._width = column.width ? column.width : '';    // update in handleResize()
