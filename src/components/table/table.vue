@@ -538,7 +538,7 @@
                 }
                 return JSON.parse(JSON.stringify(this.data.filter((data, index) => selectionIndexes.indexOf(index) > -1)));
             },
-            toggleSelect (_index) {
+            toggleSelect (_index, customStatus) {
                 let data = {};
 
                 for (let i in this.objData) {
@@ -547,7 +547,9 @@
                         break;
                     }
                 }
-                const status = !data._isChecked;
+                // add by wan
+                const status = customStatus || !data._isChecked;
+                // add end
 
                 this.objData[_index]._isChecked = status;
 
