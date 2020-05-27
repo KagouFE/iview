@@ -237,7 +237,39 @@ const router = new VueRouter({
         {
             path: '/list',
             component: (resolve) => require(['./routers/list.vue'], resolve)
-        }
+        },
+        {
+            path: '/ksplit',
+            component: (resolve) => require(['./routers/ksplit.vue'], resolve)
+        },
+        {
+            path: '/panel',
+            component: (resolve) => require(['./routers/panel.vue'], resolve)
+        },
+        {
+            path: '/list',
+            component: (resolve) => require(['./routers/list.vue'], resolve)
+        },
+        {
+            path: '/editor',
+            component: (resolve) => require(['./routers/editor.vue'], resolve)
+        },
+        {
+            path: '/file-export',
+            component: (resolve) => require(['./routers/file-export.vue'], resolve)
+        },
+        {
+            path: '/textarea-format',
+            component: (resolve) => require(['./routers/textarea-format.vue'], resolve)
+        },
+        {
+            path: '/merge-table',
+            component: (resolve) => require(['./routers/merge-table.vue'], resolve)
+        },
+        {
+            path: '/form-compact',
+            component: (resolve) => require(['./routers/form-compact.vue'], resolve)
+        },
     ]
 });
 
